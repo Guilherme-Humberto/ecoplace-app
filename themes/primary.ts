@@ -6,8 +6,9 @@ export const theme = {
     quartiary: '#E1FAEC',
     danger: '#e63946',
     warning: '#ffb703',
-    success: '#52b788',
+    green: '#2caa66',
     white: '#ffffff',
+    gray: '#F0F0F5',
     dark: '#000000',
     background: '#F6F6F6'
   },

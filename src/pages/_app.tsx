@@ -1,5 +1,5 @@
-import Footer from '@components/organisms/Footer'
-import Header from '@components/organisms/Header'
+import Footer from '@components/molecules/Footer'
+import Header from '@components/molecules/Header'
 
 import type { AppProps } from 'next/app'
 import { ThemeProvider } from 'styled-components'
@@ -10,7 +10,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyles />
-      <Header />
+      {/* <Header /> */}
       <Component {...pageProps} />
       <Footer />
     </ThemeProvider>

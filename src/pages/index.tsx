@@ -1,11 +1,8 @@
 import React from 'react'
+import HomePageFC from '@components/organisms/Home'
 
 const Home: React.FC = () => {
-  return (
-    <main>
-      <h1>teste</h1>
-    </main>
-  )
+  return <HomePageFC />
 }
 
 export default Home
