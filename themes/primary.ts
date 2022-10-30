@@ -1,19 +1,19 @@
 export const theme = {
   colors: {
-    primary: '#db423d',
-    secondary: '#370617',
-    tertiary: '#03071e',
+    primary: '#34CB79',
+    secondary: '#322153',
+    tertiary: '#6C6C80',
+    quartiary: '#E1FAEC',
     danger: '#e63946',
     warning: '#ffb703',
     success: '#52b788',
-    font: '#000000',
     white: '#ffffff',
     dark: '#000000',
-    background: '#f7efee'
+    background: '#F6F6F6'
   },
   fonts: {
     primary: 'Poppins, sans-serif',
-    secondary: 'Josefin Sans, sans-serif',
-    tertiary: ''
+    secondary: 'Ubuntu, sans-serif',
+    tertiary: 'Josefin Sans, sans-serif'
   }
 }

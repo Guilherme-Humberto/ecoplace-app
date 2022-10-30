@@ -1,6 +1,4 @@
-import styled, { css, createGlobalStyle } from 'styled-components'
-import { AiOutlineInstagram, AiOutlineFacebook } from 'react-icons/ai'
-import { FaWhatsapp } from 'react-icons/fa'
+import { createGlobalStyle } from 'styled-components'
 
 export const GlobalStyles = createGlobalStyle`
     *,
@@ -28,7 +26,7 @@ export const GlobalStyles = createGlobalStyle`
         font-family: ${props => props.theme.fonts.primary};
         font-weight: 400;
         font-size: 1.6rem;
-        color: ${props => props.theme.colors.font};
+        color: ${props => props.theme.colors.secondary};
     }
     img {
         display: block;
@@ -39,30 +37,11 @@ export const GlobalStyles = createGlobalStyle`
     a,
     a:link,
     a:visited {
-        color: ${props => props.theme.colors.font};
+        color: ${props => props.theme.colors.secondary};
         text-decoration: none;
     }
     .constraint {
         max-width: 1440px;
         margin: 0 auto;
     }
-`
-
-export const Flex = css`
-  display: flex;
-  align-items: center;
-`
-
-const Icon = css`
-  font-size: 2rem;
-`
-
-export const InstagramIcon = styled(AiOutlineInstagram)`
-  ${Icon}
-`
-export const FacebookIcon = styled(AiOutlineFacebook)`
-  ${Icon}
-`
-export const WhatsAppIcon = styled(FaWhatsapp)`
-  ${Icon}
 `

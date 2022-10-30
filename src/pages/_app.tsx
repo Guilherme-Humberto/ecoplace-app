@@ -1,6 +1,5 @@
 import Footer from '@components/organisms/Footer'
 import Header from '@components/organisms/Header'
-import '@splidejs/splide/dist/css/themes/splide-skyblue.min.css'
 
 import type { AppProps } from 'next/app'
 import { ThemeProvider } from 'styled-components'
