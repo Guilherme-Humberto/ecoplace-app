@@ -1,11 +1,48 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { FiLogIn } from 'react-icons/fi'
 import ButtonFC from '@components/atoms/Button'
 import InputFC from '@components/atoms/Input'
-import { Container, Column, Constraint, SubTitle, Title, Text } from './styles'
+import { getMicroregions, getStates } from '@helpers/getRegions'
+import { ISelectOptions } from '@interfaces/index'
+import {
+  Container,
+  Column,
+  Constraint,
+  SubTitle,
+  Title,
+  Text,
+  SelectState,
+  customSelectStyles
+} from './styles'
 
 const HomeSec1FC: React.FC = () => {
+  const [stateOptions, setStateOptions] = useState([])
+  const [cityOptions, setCityOptions] = useState([])
+  const [stateValue, setStateValue] = useState<ISelectOptions>({} as ISelectOptions)
+  const [cityValue, setCityValue] = useState<ISelectOptions>({} as ISelectOptions)
+  const [userName, setUserName] = useState('')
+
+  const getStateOptions = async () => {
+    const dataState = await getStates()
+    return setStateOptions(dataState)
+  }
+
+  const getCityOptions = async () => {
+    setCityOptions([])
+    setCityValue({} as ISelectOptions)
+    const dataCity = await getMicroregions(Number(stateValue.value))
+    return setCityOptions(dataCity)
+  }
+
+  useEffect(() => {
+    getStateOptions()
+  }, [])
+
+  useEffect(() => {
+    getCityOptions()
+  }, [stateValue?.value])
+
   return (
     <Container>
       <Constraint>
@@ -19,9 +56,29 @@ const HomeSec1FC: React.FC = () => {
           </Text>
         </Column>
         <Column>
-          <InputFC placeholder="Qual seu nome?" value="" />
-          <InputFC placeholder="Selecione a estado" value="" />
-          <InputFC placeholder="Selecione a cidade" value="" />
+          <InputFC
+            value={userName}
+            setState={setUserName}
+            placeholder="Qual seu nome?"
+          />
+          <SelectState
+            value={stateValue.value ? stateValue : null}
+            options={stateOptions}
+            styles={customSelectStyles}
+            placeholder="Selecione o estado"
+            onChange={option => setStateValue(option as ISelectOptions)}
+            isLoading={stateOptions.length == 0}
+            isDisabled={stateOptions.length == 0}
+          />
+          {stateValue.value && (
+            <SelectState
+              value={cityValue.value ? cityValue : null}
+              options={cityOptions}
+              styles={customSelectStyles}
+              onChange={option => setCityValue(option as ISelectOptions)}
+              placeholder="Selecione o cidade"
+            />
+          )}
           <ButtonFC>
             <p className="text-with-icon">
               <FiLogIn size={30} /> Acessar o EcoPlace

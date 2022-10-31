@@ -1,4 +1,19 @@
 import styled from 'styled-components'
+import ReactSelect from "react-select";
+
+export const customSelectStyles = {
+  control: (base: any, state: any) => ({
+    ...base,
+    minHeight: '45px',
+    border: state.isFocused ? '2px solid #6C6C80' : '2px solid #F0F0F5',
+    boxShadow: 'none',
+
+    '&:hover': {
+      borderColor: '#F0F0F5'
+    }
+  })
+}
+
 
 export const Container = styled.section`
   min-height: 100vh;
@@ -29,9 +44,9 @@ export const Title = styled.h1`
 `
 export const SubTitle = styled.h2`
   font-size: 24px;
-  font-family: ${props => props.theme.fonts.secondary};
   font-weight: 500;
   margin-top: 30px;
+  font-family: ${props => props.theme.fonts.secondary};
 `
 export const Text = styled.p`
   color: ${props => props.theme.colors.tertiary};
@@ -40,4 +55,7 @@ export const Text = styled.p`
   letter-spacing: 5%;
   font-weight: lighter;
   max-width: 482px;
+`
+export const SelectState = styled(ReactSelect)`
+  margin: 20px 0;
 `
