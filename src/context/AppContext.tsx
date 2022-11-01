@@ -2,26 +2,33 @@ import { ISelectOptions } from '@interfaces/index'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
 interface AppContextProps {
-  userNameValue: string
-  stateValue: ISelectOptions
-  cityValue: ISelectOptions
+  userNameGlobalValue: any
+  stateGlobalValue: any
+  cityGlobalValue: any
+  setUserNameGlobalValue: any
+  setStateGlobalValue: any
+  setCityGlobalValue: any
 }
 
 export const AppContext = createContext<AppContextProps>({} as AppContextProps)
 
 const AppProvider: React.FC = ({ children }) => {
-  const [userNameValue, setUserNameValue] = useState<string>('')
-  const [stateValue, setStateValue] = useState<ISelectOptions>({} as ISelectOptions)
-  const [cityValue, setCityValue] = useState<ISelectOptions>({} as ISelectOptions)
+  const [userNameGlobalValue, setUserNameGlobalValue] = useState<string>('')
+  const [stateGlobalValue, setStateGlobalValue] = useState<ISelectOptions>(
+    {} as ISelectOptions
+  )
+  const [cityGlobalValue, setCityGlobalValue] = useState<ISelectOptions>(
+    {} as ISelectOptions
+  )
 
   const getValuesInStorage = () => {
     const userNameItem = localStorage.getItem('user-name')
     const regionStateItem = localStorage.getItem('region-state')
     const regionCityItem = localStorage.getItem('region-city')
 
-    setUserNameValue(String(userNameItem))
-    setStateValue(JSON.parse(JSON.stringify(regionStateItem)))
-    setCityValue(JSON.parse(JSON.stringify(regionCityItem)))
+    setUserNameGlobalValue(String(userNameItem))
+    setStateGlobalValue(JSON.parse(JSON.stringify(regionStateItem)))
+    setCityGlobalValue(JSON.parse(JSON.stringify(regionCityItem)))
   }
 
   useEffect(() => {
@@ -31,9 +38,12 @@ const AppProvider: React.FC = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
-        userNameValue,
-        stateValue,
-        cityValue
+        userNameGlobalValue,
+        stateGlobalValue,
+        cityGlobalValue,
+        setUserNameGlobalValue,
+        setStateGlobalValue,
+        setCityGlobalValue
       }}
     >
       {children}

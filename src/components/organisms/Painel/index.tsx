@@ -8,7 +8,7 @@ import { ICollectionItems } from '@interfaces/index'
 import CollectionsCenterFC from './CollectionsCenter'
 
 const PainelPageFC: React.FC = () => {
-  const { userNameValue } = useAppContext()
+  const { userNameGlobalValue } = useAppContext()
   const [collectionItem, setCollectionItem] = useState<ICollectionItems>({} as ICollectionItems)
 
   return (
@@ -16,7 +16,7 @@ const PainelPageFC: React.FC = () => {
       <PainelHeader />
       <Container>
         <PainelTitle
-          title={`Olá ${userNameValue}`}
+          title={`Olá ${userNameGlobalValue}`}
           subtitle={'Estes são os pontos de coleta próximos da sua região.'}
         />
         <CollectionItemsFC setState={setCollectionItem} />

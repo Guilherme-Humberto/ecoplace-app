@@ -16,13 +16,22 @@ import {
   SelectState,
   customSelectStyles
 } from './styles'
+import { useAppContext } from 'context/AppContext'
 
 const HomeSec1FC: React.FC = () => {
   const router = useRouter()
+
+  const { setCityGlobalValue, setStateGlobalValue, setUserNameGlobalValue } =
+    useAppContext()
+
   const [stateOptions, setStateOptions] = useState([])
   const [cityOptions, setCityOptions] = useState([])
-  const [stateValue, setStateValue] = useState<ISelectOptions>({} as ISelectOptions)
-  const [cityValue, setCityValue] = useState<ISelectOptions>({} as ISelectOptions)
+  const [stateValue, setStateValue] = useState<ISelectOptions>(
+    {} as ISelectOptions
+  )
+  const [cityValue, setCityValue] = useState<ISelectOptions>(
+    {} as ISelectOptions
+  )
   const [userName, setUserName] = useState('')
 
   const getStateOptions = async () => {
@@ -45,6 +54,11 @@ const HomeSec1FC: React.FC = () => {
     localStorage.setItem('user-name', userName)
     localStorage.setItem('region-state', JSON.stringify(stateValue))
     localStorage.setItem('region-city', JSON.stringify(cityValue))
+
+    setUserNameGlobalValue(userName)
+    setStateGlobalValue(stateValue)
+    setCityGlobalValue(cityValue)
+
     return router.push('/painel')
   }
 
