@@ -20,6 +20,7 @@
       "@helpers/*": ["./helpers/*"],
       "@hooks/*": ["./hooks/*"],
       "@interfaces/*": ["./interfaces/*"],
+      "@api/*": ["./api/*"],
       "@styles/*": ["./styles/*"],
     }
   },

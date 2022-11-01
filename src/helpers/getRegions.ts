@@ -1,13 +1,11 @@
-import axios from "axios"
-
-const ibgeApiStates = 'https://servicodados.ibge.gov.br/api/v1/localidades/estados'
+import { ibgeApi } from "api"
 
 export const getStates = async () => {
-    const response = await axios.get(ibgeApiStates)
+    const response = await ibgeApi.get('/estados')
     return response.data.map((item: any) => ({ value: item.id, label: item.nome }))
 }
 
 export const getMicroregions = async (stateId: number) => {
-    const response = await axios.get(`${ibgeApiStates}/${stateId}/microrregioes`)
+    const response = await ibgeApi.get(`/estados/${stateId}/microrregioes`)
     return response.data.map((item: any) => ({ value: item.id, label: item.nome }))
 }

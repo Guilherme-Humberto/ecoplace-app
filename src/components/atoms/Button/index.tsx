@@ -1,8 +1,12 @@
 import React from 'react';
 import { Container } from './styles';
 
-const ButtonFC: React.FC = ({ children }) => {
-  return <Container>{children}</Container>
+interface IButtonFc {
+  event: any
+}
+
+const ButtonFC: React.FC<IButtonFc> = ({ event, children }) => {
+  return <Container onClick={event}>{children}</Container>
 }
 
 export default ButtonFC;

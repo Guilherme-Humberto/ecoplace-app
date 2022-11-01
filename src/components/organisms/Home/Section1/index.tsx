@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { FiLogIn } from 'react-icons/fi'
 import ButtonFC from '@components/atoms/Button'
 import InputFC from '@components/atoms/Input'
@@ -17,6 +18,7 @@ import {
 } from './styles'
 
 const HomeSec1FC: React.FC = () => {
+  const router = useRouter()
   const [stateOptions, setStateOptions] = useState([])
   const [cityOptions, setCityOptions] = useState([])
   const [stateValue, setStateValue] = useState<ISelectOptions>({} as ISelectOptions)
@@ -33,6 +35,17 @@ const HomeSec1FC: React.FC = () => {
     setCityValue({} as ISelectOptions)
     const dataCity = await getMicroregions(Number(stateValue.value))
     return setCityOptions(dataCity)
+  }
+
+  const handleSubmit = () => {
+    if (userName == '' || !cityValue.value || !stateValue.value) {
+      return alert('Dados incompletos')
+    }
+
+    localStorage.setItem('user-name', userName)
+    localStorage.setItem('region-state', JSON.stringify(stateValue))
+    localStorage.setItem('region-city', JSON.stringify(cityValue))
+    return router.push('/painel')
   }
 
   useEffect(() => {
@@ -79,7 +92,7 @@ const HomeSec1FC: React.FC = () => {
               placeholder="Selecione o cidade"
             />
           )}
-          <ButtonFC>
+          <ButtonFC event={handleSubmit}>
             <p className="text-with-icon">
               <FiLogIn size={30} /> Acessar o EcoPlace
             </p>

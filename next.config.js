@@ -4,7 +4,7 @@ module.exports = {
     domains: [
       'localhost',
       'images.pexels.com',
-      'adminex.nyc3.digitaloceanspaces.com'
+      'res.cloudinary.com'
     ]
   },
   env: {
