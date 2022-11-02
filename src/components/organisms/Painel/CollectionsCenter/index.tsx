@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { FaWhatsapp } from 'react-icons/fa'
 import { AiOutlineMail } from 'react-icons/ai'
 import { applicationApi } from '@api/index'
+import ButtonFC from '@components/atoms/Button'
+import NotFoundMessage from '@components/molecules/NotFoundMessage'
 import {
   Container,
   ItemCard,
@@ -14,7 +17,6 @@ import {
   CollectionItems,
   ContactsBtn
 } from './styles'
-import ButtonFC from '@components/atoms/Button'
 
 interface ICollectionsCenter {
   name: string
@@ -24,20 +26,34 @@ interface ICollectionsCenter {
   email: string
 }
 
-const CollectionsCenterFC: React.FC = () => {
+interface ICollectionsCenterFC {
+  mesoRegionId: number
+  microRegionId: number
+}
+
+const CollectionsCenterFC: React.FC<ICollectionsCenterFC> = ({ mesoRegionId, microRegionId }) => {
+  const router = useRouter()
+
   const [collectionsCenter, setCollectionsCenter] = useState<
     ICollectionsCenter[]
   >([])
 
   const getCollectionsCenter = async () => {
-    const { data } = await applicationApi.get('/collectionCenter/listAll')
-    console.log(data)
-    setCollectionsCenter(data)
+    if (mesoRegionId || microRegionId) {
+      const { data } = await applicationApi.get(`/collectionCenter/addrs`, {
+        params: { meso_region_id: mesoRegionId, micro_region_id: microRegionId }
+      })
+      return setCollectionsCenter(data)
+    }
+
+    return setCollectionsCenter([])
   }
 
   useEffect(() => {
     getCollectionsCenter()
-  }, [])
+  }, [mesoRegionId, microRegionId])
+
+  if (collectionsCenter.length < 1) return <NotFoundMessage />
 
   return (
     <Container>
@@ -65,12 +81,12 @@ const CollectionsCenterFC: React.FC = () => {
               {'Papéis e Papelão, Resíduos Eletrônicos, Óleo de Cozinha'}
             </CollectionItems>
             <ContactsBtn>
-              <ButtonFC event={() => {}}>
+              <ButtonFC event={() => router.push(`https://api.whatsapp.com/send?phone=+55${item.phone}`)}>
                 <div className="text-with-icon">
                   <FaWhatsapp size={20} /> WhatsApp
                 </div>
               </ButtonFC>
-              <ButtonFC event={() => {}}>
+              <ButtonFC event={() => router.push(`mailto:${item.email}`)}>
                 <div className="text-with-icon">
                   <AiOutlineMail size={20} /> Email
                 </div>

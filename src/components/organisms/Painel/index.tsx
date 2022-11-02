@@ -8,7 +8,7 @@ import { ICollectionItems } from '@interfaces/index'
 import CollectionsCenterFC from './CollectionsCenter'
 
 const PainelPageFC: React.FC = () => {
-  const { userNameGlobalValue } = useAppContext()
+  const { userNameGlobalValue, stateGlobalValue, cityGlobalValue } = useAppContext()
   const [collectionItem, setCollectionItem] = useState<ICollectionItems>({} as ICollectionItems)
 
   return (
@@ -20,7 +20,10 @@ const PainelPageFC: React.FC = () => {
           subtitle={'Estes são os pontos de coleta próximos da sua região.'}
         />
         <CollectionItemsFC setState={setCollectionItem} />
-        <CollectionsCenterFC />
+        <CollectionsCenterFC
+          mesoRegionId={stateGlobalValue.value}
+          microRegionId={cityGlobalValue.value}
+        />
       </Container>
     </>
   )

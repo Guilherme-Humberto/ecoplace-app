@@ -3,8 +3,8 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 
 interface AppContextProps {
   userNameGlobalValue: any
-  stateGlobalValue: any
-  cityGlobalValue: any
+  stateGlobalValue: ISelectOptions
+  cityGlobalValue: ISelectOptions
   setUserNameGlobalValue: any
   setStateGlobalValue: any
   setCityGlobalValue: any
@@ -27,13 +27,14 @@ const AppProvider: React.FC = ({ children }) => {
     const regionCityItem = localStorage.getItem('region-city')
 
     setUserNameGlobalValue(String(userNameItem))
-    setStateGlobalValue(JSON.parse(JSON.stringify(regionStateItem)))
-    setCityGlobalValue(JSON.parse(JSON.stringify(regionCityItem)))
+    setStateGlobalValue(JSON.parse(String(regionStateItem)))
+    setCityGlobalValue(JSON.parse(String(regionCityItem)))
+    return
   }
-
+  
   useEffect(() => {
     getValuesInStorage()
-  }, [])
+  }, [stateGlobalValue.value, cityGlobalValue.value])
 
   return (
     <AppContext.Provider
