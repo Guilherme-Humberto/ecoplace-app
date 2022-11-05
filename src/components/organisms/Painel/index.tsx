@@ -3,13 +3,13 @@ import { useAppContext } from 'context/AppContext'
 import CollectionItemsFC from './CollectionItems'
 import PainelHeader from '@components/molecules/PainelHeader'
 import PainelTitle from '@components/molecules/PainelTitle'
-import { Container } from './styles'
-import { ICollectionItems } from '@interfaces/index'
 import CollectionsCenterFC from './CollectionsCenter'
+import { ICollectionItems } from '@interfaces/index'
+import { Container } from './styles'
 
 const PainelPageFC: React.FC = () => {
   const { userNameGlobalValue, stateGlobalValue, cityGlobalValue } = useAppContext()
-  const [collectionItem, setCollectionItem] = useState<ICollectionItems>({} as ICollectionItems)
+  const [selectCollectionItem, setSelectCollectionItem] = useState<ICollectionItems[]>([])
 
   return (
     <>
@@ -17,10 +17,14 @@ const PainelPageFC: React.FC = () => {
       <Container>
         <PainelTitle
           title={`Olá ${userNameGlobalValue}`}
-          subtitle={'Estes são os pontos de coleta próximos da sua região.'}
+          subtitle={`Visualize os pontos de coleta próximos de ${stateGlobalValue.label}/${cityGlobalValue.label}`}
         />
-        <CollectionItemsFC setState={setCollectionItem} />
+        <CollectionItemsFC
+          selectCollectionItem={selectCollectionItem}
+          setSelectCollectionItem={setSelectCollectionItem}
+        />
         <CollectionsCenterFC
+          selectCollectionItem={selectCollectionItem}
           mesoRegionId={stateGlobalValue.value}
           microRegionId={cityGlobalValue.value}
         />

@@ -5,7 +5,8 @@ import { FaWhatsapp } from 'react-icons/fa'
 import { AiOutlineMail } from 'react-icons/ai'
 import { applicationApi } from '@api/index'
 import ButtonFC from '@components/atoms/Button'
-import NotFoundMessage from '@components/molecules/NotFoundMessage'
+import MessageAlert from '@components/molecules/MessageAlert'
+import { ICollectionsCenter, ICollectionsCenterFC } from '@interfaces/index'
 import {
   Container,
   ItemCard,
@@ -15,45 +16,71 @@ import {
   ContactWrapper,
   Addresses,
   CollectionItems,
-  ContactsBtn
+  ContactsBtn,
+  Description,
+  CollectItem
 } from './styles'
 
-interface ICollectionsCenter {
-  name: string
-  description: string
-  image: string
-  phone: string
-  email: string
-}
-
-interface ICollectionsCenterFC {
-  mesoRegionId: number
-  microRegionId: number
-}
-
-const CollectionsCenterFC: React.FC<ICollectionsCenterFC> = ({ mesoRegionId, microRegionId }) => {
+const CollectionsCenterFC: React.FC<ICollectionsCenterFC> = ({
+  mesoRegionId,
+  microRegionId,
+  selectCollectionItem
+}) => {
   const router = useRouter()
-
+  const [isLoading, setIsLoading] = useState(true)
   const [collectionsCenter, setCollectionsCenter] = useState<
     ICollectionsCenter[]
   >([])
 
   const getCollectionsCenter = async () => {
-    if (mesoRegionId || microRegionId) {
-      const { data } = await applicationApi.get(`/collectionCenter/addrs`, {
-        params: { meso_region_id: mesoRegionId, micro_region_id: microRegionId }
-      })
-      return setCollectionsCenter(data)
-    }
+    setIsLoading(true)
+    const { data: collectionsCenter } = await applicationApi.post(
+      `/collectionCenter`,
+      {
+        mesoregion_id: mesoRegionId,
+        microregion_id: microRegionId,
+        item_id: selectCollectionItem.map(item => item.id)
+      }
+    )
 
-    return setCollectionsCenter([])
+    setCollectionsCenter(collectionsCenter)
+    return setIsLoading(false)
   }
 
-  useEffect(() => {
-    getCollectionsCenter()
-  }, [mesoRegionId, microRegionId])
+  const navigateToContact = (phone: string) =>
+    router.push(`https://api.whatsapp.com/send?phone=+55${phone}`)
 
-  if (collectionsCenter.length < 1) return <NotFoundMessage />
+  const navigateToEmail = (email: string) => router.push(`mailto:${email}`)
+
+  useEffect(() => {
+    if (mesoRegionId && microRegionId) getCollectionsCenter()
+  }, [selectCollectionItem, mesoRegionId, microRegionId])
+
+  if (selectCollectionItem.length == 0) {
+    return (
+      <MessageAlert
+        title="Selecione um item de coleta"
+        subtitle="Selecione um item de coleta para visualizar os ponto de coleta na sua região."
+      />
+    )
+  }
+
+  if (!isLoading && collectionsCenter.length == 0)
+    return (
+      <MessageAlert
+        link="Entrar em contato"
+        title="Nenhum ponto de coleta encontrado"
+        subtitle="Volte para a tela inicial e procure em outra região ou entre em contato com nossa equipe."
+      />
+    )
+
+  if (isLoading)
+    return (
+      <MessageAlert
+        title="Carregando..."
+        subtitle="Estamos procurando os ponto de coleta próximos da sua região."
+      />
+    )
 
   return (
     <Container>
@@ -70,23 +97,33 @@ const CollectionsCenterFC: React.FC<ICollectionsCenterFC> = ({ mesoRegionId, mic
             <div>
               <small>Ponto de coleta</small>
               <Title>{item.name}</Title>
+              <Description>{item.description}</Description>
             </div>
             <Addresses>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste,
-              cum!
+              {item.addresses.map(addrs => (
+                <div key={addrs.id}>
+                  <p>
+                    {addrs.addrs_name} | {addrs.addrs_number}
+                  </p>
+                  <p>CEP: {addrs.zip_code}</p>
+                  <p>Bairro: {addrs.district}</p>
+                </div>
+              ))}
             </Addresses>
           </AboutWrapper>
           <ContactWrapper>
             <CollectionItems>
-              {'Papéis e Papelão, Resíduos Eletrônicos, Óleo de Cozinha'}
+              {item.items.map(collectItem => (
+                <CollectItem key={collectItem.id}>{collectItem.title}</CollectItem>
+              ))}
             </CollectionItems>
             <ContactsBtn>
-              <ButtonFC event={() => router.push(`https://api.whatsapp.com/send?phone=+55${item.phone}`)}>
+              <ButtonFC event={() => navigateToContact(item.phone)}>
                 <div className="text-with-icon">
                   <FaWhatsapp size={20} /> WhatsApp
                 </div>
               </ButtonFC>
-              <ButtonFC event={() => router.push(`mailto:${item.email}`)}>
+              <ButtonFC event={() => navigateToEmail(item.email)}>
                 <div className="text-with-icon">
                   <AiOutlineMail size={20} /> Email
                 </div>

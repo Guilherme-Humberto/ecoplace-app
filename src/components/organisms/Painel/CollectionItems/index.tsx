@@ -5,15 +5,32 @@ import { Container, ItemCard, Title } from './styles'
 import { ICollectionItems } from '@interfaces/index'
 
 interface ICollectionItemsFcProps {
-  setState: React.Dispatch<React.SetStateAction<ICollectionItems>>
+  selectCollectionItem: ICollectionItems[]
+  setSelectCollectionItem: React.Dispatch<
+    React.SetStateAction<ICollectionItems[]>
+  >
 }
 
-const CollectionItemsFC: React.FC<ICollectionItemsFcProps> = ({ setState }) => {
+const CollectionItemsFC: React.FC<ICollectionItemsFcProps> = ({
+  selectCollectionItem,
+  setSelectCollectionItem
+}) => {
   const [collectionItems, setCollectionItems] = useState<ICollectionItems[]>([])
 
   const getCollectionItems = async () => {
-    const { data } = await applicationApi.get('/collectionItem/listAll')
-    setCollectionItems(data)
+    const { data: collectionItems } = await applicationApi.get('/collectionItem/listAll')
+    return setCollectionItems(collectionItems)
+  }
+
+  const addCollectionItem = (item: ICollectionItems) => {
+    const filterItem = selectCollectionItem.filter(element => element.id == item.id)
+    const removeItem = selectCollectionItem.filter(element => element.id !== item.id)
+
+    if (filterItem.length == 0) {
+      return setSelectCollectionItem(prev => [...prev, item])
+    }
+
+    return setSelectCollectionItem(removeItem)
   }
 
   useEffect(() => {
@@ -23,7 +40,11 @@ const CollectionItemsFC: React.FC<ICollectionItemsFcProps> = ({ setState }) => {
   return (
     <Container>
       {collectionItems.map(item => (
-        <ItemCard key={item.slug} onClick={() => setState(item)}>
+        <ItemCard
+          key={item.slug}
+          onClick={() => addCollectionItem(item)}
+          active={!!selectCollectionItem?.find(element => element.id == item.id)}
+        >
           <Image
             src={item.image || ''}
             width={80}
