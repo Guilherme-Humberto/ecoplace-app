@@ -37,10 +37,3 @@ export const Text = styled.p`
         max-width: 80%;
     }
 `
-
-export const GitHubLink = styled.a`
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 20px;
-`

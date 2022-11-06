@@ -18,8 +18,10 @@ import {
   CollectionItems,
   ContactsBtn,
   Description,
-  CollectItem
+  CollectItem,
+  Buttons
 } from './styles'
+import { collectionDetailsMock } from '../../../../mocks'
 
 const CollectionsCenterFC: React.FC<ICollectionsCenterFC> = ({
   mesoRegionId,
@@ -84,13 +86,14 @@ const CollectionsCenterFC: React.FC<ICollectionsCenterFC> = ({
 
   return (
     <Container>
-      {collectionsCenter.map((item, index) => (
+      {collectionDetailsMock.map((item, index) => (
         <ItemCard key={index}>
           <ImageWrapper>
             <Image
               src={item.image || ''}
-              layout="fill"
               alt={`Ponto de coleta - ${item.name}`}
+              layout="fill"
+              objectFit='cover'
             />
           </ImageWrapper>
           <AboutWrapper>
@@ -114,20 +117,25 @@ const CollectionsCenterFC: React.FC<ICollectionsCenterFC> = ({
           <ContactWrapper>
             <CollectionItems>
               {item.items.map(collectItem => (
-                <CollectItem key={collectItem.id}>{collectItem.title}</CollectItem>
+                <CollectItem key={collectItem.id}>
+                  {collectItem.title}
+                </CollectItem>
               ))}
             </CollectionItems>
             <ContactsBtn>
-              <ButtonFC event={() => navigateToContact(item.phone)}>
-                <div className="text-with-icon">
-                  <FaWhatsapp size={20} /> WhatsApp
-                </div>
-              </ButtonFC>
-              <ButtonFC event={() => navigateToEmail(item.email)}>
-                <div className="text-with-icon">
-                  <AiOutlineMail size={20} /> Email
-                </div>
-              </ButtonFC>
+              <small>Entre em contato</small>
+              <Buttons>
+                <ButtonFC event={() => navigateToContact(item.phone)}>
+                  <div className="text-with-icon">
+                    <FaWhatsapp size={20} /> WhatsApp
+                  </div>
+                </ButtonFC>
+                <ButtonFC event={() => navigateToEmail(item.email)}>
+                  <div className="text-with-icon">
+                    <AiOutlineMail size={20} /> Email
+                  </div>
+                </ButtonFC>
+              </Buttons>
             </ContactsBtn>
           </ContactWrapper>
         </ItemCard>

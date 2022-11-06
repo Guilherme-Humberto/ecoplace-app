@@ -1,16 +1,8 @@
 import React from 'react'
-import Link from 'next/link'
-import { FiGithub } from 'react-icons/fi'
 import ButtonFC from '@components/atoms/Button'
 import InputFC from '@components/atoms/Input'
-import {
-  Container,
-  Column,
-  Constraint,
-  Text,
-  Title,
-  GitHubLink
-} from './styles'
+import { Container, Column, Constraint, Text, Title } from './styles'
+import GitHubLink from '@components/atoms/GitHubLink'
 
 const HomeSec2FC: React.FC = () => {
   return (
@@ -35,16 +27,20 @@ const HomeSec2FC: React.FC = () => {
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </Text>
-            <Link href="/https://github.com/Guilherme-Humberto/ecoplace-app" passHref>
-              <GitHubLink target="_blank">
-                <FiGithub /> Visitar projeto
-              </GitHubLink>
-            </Link>
+            <GitHubLink />
           </div>
           <div>
-            <InputFC placeholder="Qual seu nome?" value="" />
-            <InputFC placeholder="Qual seu email?" value="" />
-            <ButtonFC>
+            <InputFC
+              placeholder="Qual seu nome?"
+              value=""
+              setState={() => {}}
+            />
+            <InputFC
+              placeholder="Qual seu email?"
+              value=""
+              setState={() => {}}
+            />
+            <ButtonFC event={() => {}}>
               <p>{':)'} Quero ser um contribuidor</p>
             </ButtonFC>
           </div>

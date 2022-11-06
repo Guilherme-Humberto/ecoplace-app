@@ -12,12 +12,16 @@ export const Container = styled.div`
 export const ItemCard = styled.div`
     display: grid;
     gap: 40px;
-    grid-template-columns: 1fr 1.2fr 1.3fr;
-    padding: 30px 0;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 30px 20px;
     width: 100%;
     border-radius: 5px;
     background: ${props => props.theme.colors.white};
     border: 2px solid ${props => props.theme.colors.quartiary};
+
+    @media (max-width: 1000px) {
+        grid-template-columns: 1fr;
+    }
 `
 export const Title = styled.strong`
     font-size: 25px;
@@ -44,22 +48,27 @@ export const CollectionItems = styled.div`
     flex-wrap: wrap;
     gap: 20px;
 `
-export const ContactsBtn = styled.div`
+export const Buttons = styled.div`
     display: flex;
     align-items: center;
     gap: 20px;
     max-width: 80%;
+`
+export const ContactsBtn = styled.div`
     margin-top: 30px;
 `
 export const Description = styled.p`
     font-size: 14px;
-    display: inline-block;
-    max-width: 400px;
-    height: 1.5em;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     color: ${props => props.theme.colors.tertiary};
+
+    @media (min-width: 1000px) {
+        display: inline-block;
+        max-width: 400px;
+        height: 1.5em;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
 `
 
 export const CollectItem = styled.div`
