@@ -21,11 +21,8 @@ import { useAppContext } from 'context/AppContext'
 const HomeSec1FC: React.FC = () => {
   const router = useRouter()
 
-  const { 
-    setCityGlobalValue, 
-    setStateGlobalValue, 
-    setUserNameGlobalValue 
-  } = useAppContext()
+  const { setCityGlobalValue, setStateGlobalValue, setUserNameGlobalValue } =
+    useAppContext()
 
   const [userName, setUserName] = useState('')
   const [stateOptions, setStateOptions] = useState([])
@@ -89,7 +86,9 @@ const HomeSec1FC: React.FC = () => {
           <InputFC
             value={userName}
             setState={setUserName}
-            placeholder="Qual seu nome?" type={'text'}          />
+            placeholder="Qual seu nome?"
+            type={'text'}
+          />
           <SelectState
             value={stateValue.value ? stateValue : null}
             options={stateOptions}
