@@ -22,11 +22,13 @@ import {
 } from './styles'
 
 const AdminPainelSec1FC: React.FC = () => {
+  const [itemId, setItemId] = useState<string>('')
   const [itemTitle, setItemTitle] = useState<string>('')
   const [itemImage, setItemImage] = useState<string>('')
 
   const [collectionItems, setCollectionItems] = useState<ICollectionItems[]>([])
-  const [activeModalItem, setActiveModalItem] = useState<boolean>(false)
+  const [activeModalCreateItem, setActiveModalCreateItem] = useState<boolean>(false)
+  const [activeModalUpdateItem, setActiveModalUpdateItem] = useState<boolean>(false)
   const [statusMessage, setStatusMessage] = useState<string>(
     'Preencha as informações acima.'
   )
@@ -37,25 +39,33 @@ const AdminPainelSec1FC: React.FC = () => {
     )
     return setCollectionItems(collectionItems)
   }
-  
-  const openModalNewItem = () => {
-    setActiveModalItem(true)
 
+  const clearItemState = () => {
+    setItemId('')
     setItemTitle('')
     setItemImage('')
   }
+  
+  const openModalNewItem = () => {
+    clearItemState()
+    setActiveModalCreateItem(true)
+  }
 
   const openModalUpdateItem = (item: ICollectionItems) => {
-    setActiveModalItem(true)
+    setActiveModalUpdateItem(true)
 
+    setItemId(item.id)
     setItemTitle(item.title)
     setItemImage(item.image)
   }
 
-  const closeModalUpdateItem = () => {
-    setActiveModalItem(false)
+  const closeModalAndClearState = () => {
+    clearItemState()
+    setActiveModalUpdateItem(false)
+    setActiveModalCreateItem(false)
   }
 
+  // Criar novo item de coleta
   const handleRegisterCollectionItem = async (event: FormEvent) => {
     event.preventDefault()
 
@@ -65,17 +75,51 @@ const AdminPainelSec1FC: React.FC = () => {
         image: itemImage
       })
       .then(response => {
-        setActiveModalItem(false)
-        setItemTitle('')
-        setItemImage('')
-
+        closeModalAndClearState()
         getCollectionItems()
       })
       .catch(error => {
         console.log(error)
-        setItemTitle('')
-        setItemImage('')
+        clearItemState()
         setStatusMessage('Erro ao criar item de coleta')
+      })
+  }
+
+  // Atualizar item de coleta
+  const handleUpdateCollectionItem = async (event: FormEvent) => {
+    event.preventDefault()
+
+    applicationApi
+      .put('/collectionItem/update', {
+        title: itemTitle,
+        image: itemImage
+      }, {
+        params: { id: itemId }
+      })
+      .then(response => {
+        closeModalAndClearState()
+        getCollectionItems()
+      })
+      .catch(error => {
+        console.log(error)
+        clearItemState()
+        setStatusMessage('Erro ao atualizar item de coleta')
+      })
+  }
+
+  // Deleter item de coleta
+  const handleDeleteCollectionItem = async () => {
+    applicationApi.delete('/collectionItem/delete', {
+        params: { id: itemId }
+      })
+      .then(() => {
+        closeModalAndClearState()
+        getCollectionItems()
+      })
+      .catch((error) => {
+        console.log(error)
+        clearItemState()
+        setStatusMessage('Erro ao remover item de coleta')
       })
   }
 
@@ -112,11 +156,11 @@ const AdminPainelSec1FC: React.FC = () => {
           </Column>
         </Constraint>
       </Container>
-      {activeModalItem && (itemTitle == '' || itemImage == '') && (
+      {activeModalCreateItem && itemId == '' && (
         <Modal
           minWidth={'800px'}
           maxWidth={'800px'}
-          event={() => setActiveModalItem(false)}
+          event={closeModalAndClearState}
         >
           <ModalTitles>
             <ModalTitle>Novo ítem de coleta</ModalTitle>
@@ -143,18 +187,18 @@ const AdminPainelSec1FC: React.FC = () => {
           {statusMessage && <StatusMessage>{statusMessage}</StatusMessage>}
         </Modal>
       )}
-      {activeModalItem && (itemTitle !== '' || itemImage !== '') && (
+      {activeModalUpdateItem && itemId !== '' && (
         <Modal
           minWidth={'800px'}
           maxWidth={'800px'}
-          event={closeModalUpdateItem}
+          event={closeModalAndClearState}
         >
           <ModalTitles>
             <ModalTitle>Atualizar ítem de coleta</ModalTitle>
             <ModalSubTitle>Atualizar ítem de coleta</ModalSubTitle>
           </ModalTitles>
 
-          <ModalForm onSubmit={handleRegisterCollectionItem}>
+          <ModalForm onSubmit={handleUpdateCollectionItem}>
             <InputFC
               required
               type={'text'}
@@ -170,6 +214,9 @@ const AdminPainelSec1FC: React.FC = () => {
               placeholder={'Nome do item de coleta'}
             />
             <BtnForm type="submit">Atualizar ítem de coleta</BtnForm>
+            <BtnForm type="button" outline onClick={handleDeleteCollectionItem}>
+              Remover ítem de coleta
+            </BtnForm>
           </ModalForm>
           {statusMessage && <StatusMessage>{statusMessage}</StatusMessage>}
         </Modal>

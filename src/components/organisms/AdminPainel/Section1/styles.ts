@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Splide, SplideSlide } from '@splidejs/react-splide'
 import { StyleButton } from '@components/atoms/Button/styles'
 
@@ -47,10 +47,23 @@ export const ModalTitles = styled.div`
     flex-direction: column;
 `
 export const ModalForm = styled.form``
-export const BtnForm = styled.button`
+export const BtnForm = styled.button<{ outline?: boolean }>`
     ${StyleButton};
     border: none;
     outline: none;
+    margin-top: 10px;
+
+    ${props => props.outline && css`
+      background: transparent;
+      border: 2px solid ${props => props.theme.colors.secondary};
+      color: ${props => props.theme.colors.secondary};
+
+      &:hover {
+        color: ${props => props.theme.colors.white};
+        border-color: ${props => props.theme.colors.danger};
+        background: ${props => props.theme.colors.danger};
+      }
+    `}
 `
 export const StatusMessage = styled.small`
   display: flex;
