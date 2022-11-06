@@ -1,4 +1,5 @@
 import { ISelectOptions } from '@interfaces/index'
+import { useRouter } from 'next/router'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
 interface AppContextProps {
@@ -13,6 +14,7 @@ interface AppContextProps {
 export const AppContext = createContext<AppContextProps>({} as AppContextProps)
 
 const AppProvider: React.FC = ({ children }) => {
+  const router = useRouter()
   const [userNameGlobalValue, setUserNameGlobalValue] = useState<string>('')
   const [stateGlobalValue, setStateGlobalValue] = useState<ISelectOptions>(
     {} as ISelectOptions
@@ -25,6 +27,10 @@ const AppProvider: React.FC = ({ children }) => {
     const userNameItem = localStorage.getItem('user-name')
     const regionStateItem = localStorage.getItem('region-state')
     const regionCityItem = localStorage.getItem('region-city')
+
+    if (!userNameItem || !regionStateItem || !regionCityItem) {
+      return router.push('/')
+    }
 
     setUserNameGlobalValue(String(userNameItem))
     setStateGlobalValue(JSON.parse(String(regionStateItem)))

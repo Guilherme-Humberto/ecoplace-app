@@ -7,6 +7,7 @@ import { applicationApi } from '@api/index'
 import ButtonFC from '@components/atoms/Button'
 import MessageAlert from '@components/molecules/MessageAlert'
 import { ICollectionsCenter, ICollectionsCenterFC } from '@interfaces/index'
+import { collectionDetailsMock } from '@mocks/index'
 import {
   Container,
   ItemCard,
@@ -21,7 +22,6 @@ import {
   CollectItem,
   Buttons
 } from './styles'
-import { collectionDetailsMock } from '../../../../mocks'
 
 const CollectionsCenterFC: React.FC<ICollectionsCenterFC> = ({
   mesoRegionId,
@@ -49,8 +49,9 @@ const CollectionsCenterFC: React.FC<ICollectionsCenterFC> = ({
     return setIsLoading(false)
   }
 
-  const navigateToContact = (phone: string) =>
-    router.push(`https://api.whatsapp.com/send?phone=+55${phone}`)
+  const navigateToContact = (phone: string) => {
+    return router.push(`https://api.whatsapp.com/send?phone=+55${phone}`)
+  }
 
   const navigateToEmail = (email: string) => router.push(`mailto:${email}`)
 
@@ -105,11 +106,8 @@ const CollectionsCenterFC: React.FC<ICollectionsCenterFC> = ({
             <Addresses>
               {item.addresses.map(addrs => (
                 <div key={addrs.id}>
-                  <p>
-                    {addrs.addrs_name} | {addrs.addrs_number}
-                  </p>
-                  <p>CEP: {addrs.zip_code}</p>
-                  <p>Bairro: {addrs.district}</p>
+                  <p>{addrs.addrs_name} | {addrs.addrs_number}</p>
+                  <p>CEP: {addrs.zip_code} | {addrs.district}</p>
                 </div>
               ))}
             </Addresses>

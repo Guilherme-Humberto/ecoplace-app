@@ -21,9 +21,13 @@ import { useAppContext } from 'context/AppContext'
 const HomeSec1FC: React.FC = () => {
   const router = useRouter()
 
-  const { setCityGlobalValue, setStateGlobalValue, setUserNameGlobalValue } =
-    useAppContext()
+  const { 
+    setCityGlobalValue, 
+    setStateGlobalValue, 
+    setUserNameGlobalValue 
+  } = useAppContext()
 
+  const [userName, setUserName] = useState('')
   const [stateOptions, setStateOptions] = useState([])
   const [cityOptions, setCityOptions] = useState([])
   const [stateValue, setStateValue] = useState<ISelectOptions>(
@@ -32,7 +36,6 @@ const HomeSec1FC: React.FC = () => {
   const [cityValue, setCityValue] = useState<ISelectOptions>(
     {} as ISelectOptions
   )
-  const [userName, setUserName] = useState('')
 
   const getStateOptions = async () => {
     const dataState = await getStates()
@@ -86,8 +89,7 @@ const HomeSec1FC: React.FC = () => {
           <InputFC
             value={userName}
             setState={setUserName}
-            placeholder="Qual seu nome?"
-          />
+            placeholder="Qual seu nome?" type={'text'}          />
           <SelectState
             value={stateValue.value ? stateValue : null}
             options={stateOptions}
@@ -107,9 +109,9 @@ const HomeSec1FC: React.FC = () => {
             />
           )}
           <ButtonFC event={handleSubmit}>
-            <p className="text-with-icon">
+            <div className="text-with-icon">
               <FiLogIn size={30} /> Acessar o EcoPlace
-            </p>
+            </div>
           </ButtonFC>
         </Column>
       </Constraint>
