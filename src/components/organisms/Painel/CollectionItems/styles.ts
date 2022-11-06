@@ -9,24 +9,3 @@ export const Container = styled.div`
   margin: 40px 0;
   max-width: 1400px;
 `;
-
-export const ItemCard = styled.div<{ active?: boolean }>`
-    display: grid;
-    place-items: center;
-    min-height: 192px;
-    width: 100%;
-    border-radius: 5px;
-    background: ${props => props.active ? props.theme.colors.white : props.theme.colors.quartiary};
-    border: 2px solid ${props => props.active ? props.theme.colors.green : props.theme.colors.quartiary};
-    transition: 0.5s;
-
-    &:hover {
-        cursor: pointer;
-        background: ${props => props.theme.colors.white};
-        border-color: ${props => props.theme.colors.green};
-    }
-`
-export const Title = styled.strong`
-    font-size: 16px;
-    font-weight: 500;
-`

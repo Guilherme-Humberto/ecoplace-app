@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import Image from 'next/image'
 import { applicationApi } from '@api/index'
-import { Container, ItemCard, Title } from './styles'
 import { ICollectionItems } from '@interfaces/index'
+import CollectionItemCard from '@components/atoms/CollectionItemCard'
+import { Container } from './styles'
 
 interface ICollectionItemsFcProps {
   selectCollectionItem: ICollectionItems[]
@@ -40,19 +40,17 @@ const CollectionItemsFC: React.FC<ICollectionItemsFcProps> = ({
   return (
     <Container>
       {collectionItems.map(item => (
-        <ItemCard
-          key={item.slug}
-          onClick={() => addCollectionItem(item)}
-          active={!!selectCollectionItem?.find(element => element.id == item.id)}
-        >
-          <Image
-            src={item.image || ''}
-            width={80}
-            height={80}
-            alt={item.slug}
+        <div key={item.slug} onClick={() => addCollectionItem(item)}>
+          <CollectionItemCard
+            id={item.id}
+            slug={item.slug}
+            image={item.image}
+            title={item.title}
+            active={
+              !!selectCollectionItem?.find(element => element.id == item.id)
+            }
           />
-          <Title>{item.title}</Title>
-        </ItemCard>
+        </div>
       ))}
     </Container>
   )
