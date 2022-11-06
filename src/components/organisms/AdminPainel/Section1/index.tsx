@@ -26,7 +26,7 @@ const AdminPainelSec1FC: React.FC = () => {
   const [itemImage, setItemImage] = useState<string>('')
 
   const [collectionItems, setCollectionItems] = useState<ICollectionItems[]>([])
-  const [activeModalNewItem, setActiveModalNewItem] = useState<boolean>(false)
+  const [activeModalItem, setActiveModalItem] = useState<boolean>(false)
   const [statusMessage, setStatusMessage] = useState<string>(
     'Preencha as informações acima.'
   )
@@ -37,27 +37,46 @@ const AdminPainelSec1FC: React.FC = () => {
     )
     return setCollectionItems(collectionItems)
   }
+  
+  const openModalNewItem = () => {
+    setActiveModalItem(true)
+
+    setItemTitle('')
+    setItemImage('')
+  }
+
+  const openModalUpdateItem = (item: ICollectionItems) => {
+    setActiveModalItem(true)
+
+    setItemTitle(item.title)
+    setItemImage(item.image)
+  }
+
+  const closeModalUpdateItem = () => {
+    setActiveModalItem(false)
+  }
 
   const handleRegisterCollectionItem = async (event: FormEvent) => {
     event.preventDefault()
 
-    applicationApi.post('/collectionItem/create', {
-      title: itemTitle,
-      image: itemImage
-    })
-    .then((response) => {
-      setActiveModalNewItem(false)
-      setItemTitle('')
-      setItemImage('')
+    applicationApi
+      .post('/collectionItem/create', {
+        title: itemTitle,
+        image: itemImage
+      })
+      .then(response => {
+        setActiveModalItem(false)
+        setItemTitle('')
+        setItemImage('')
 
-      getCollectionItems()
-    })
-    .catch((error) => {
-      console.log(error)
-      setItemTitle('')
-      setItemImage('')
-      setStatusMessage('Erro ao criar item de coleta')
-    })
+        getCollectionItems()
+      })
+      .catch(error => {
+        console.log(error)
+        setItemTitle('')
+        setItemImage('')
+        setStatusMessage('Erro ao criar item de coleta')
+      })
   }
 
   useEffect(() => {
@@ -73,7 +92,10 @@ const AdminPainelSec1FC: React.FC = () => {
             <ListOfItems>
               <Carrousel>
                 {collectionItems.map(item => (
-                  <ItemCarrousel key={item.slug}>
+                  <ItemCarrousel
+                    key={item.slug}
+                    onClick={() => openModalUpdateItem(item)}
+                  >
                     <CollectionItemCard
                       id={item.id}
                       slug={item.slug}
@@ -83,18 +105,18 @@ const AdminPainelSec1FC: React.FC = () => {
                   </ItemCarrousel>
                 ))}
               </Carrousel>
-              <ButtonNewItem onClick={() => setActiveModalNewItem(true)}>
+              <ButtonNewItem onClick={openModalNewItem}>
                 <BsPlus size={60} />
               </ButtonNewItem>
             </ListOfItems>
           </Column>
         </Constraint>
       </Container>
-      {activeModalNewItem && (
+      {activeModalItem && (itemTitle == '' || itemImage == '') && (
         <Modal
           minWidth={'800px'}
           maxWidth={'800px'}
-          event={() => setActiveModalNewItem(false)}
+          event={() => setActiveModalItem(false)}
         >
           <ModalTitles>
             <ModalTitle>Novo ítem de coleta</ModalTitle>
@@ -117,6 +139,37 @@ const AdminPainelSec1FC: React.FC = () => {
               placeholder={'Nome do item de coleta'}
             />
             <BtnForm type="submit">Cadastrar ítem de coleta</BtnForm>
+          </ModalForm>
+          {statusMessage && <StatusMessage>{statusMessage}</StatusMessage>}
+        </Modal>
+      )}
+      {activeModalItem && (itemTitle !== '' || itemImage !== '') && (
+        <Modal
+          minWidth={'800px'}
+          maxWidth={'800px'}
+          event={closeModalUpdateItem}
+        >
+          <ModalTitles>
+            <ModalTitle>Atualizar ítem de coleta</ModalTitle>
+            <ModalSubTitle>Atualizar ítem de coleta</ModalSubTitle>
+          </ModalTitles>
+
+          <ModalForm onSubmit={handleRegisterCollectionItem}>
+            <InputFC
+              required
+              type={'text'}
+              value={itemImage}
+              setState={setItemImage}
+              placeholder={'Imagem do item'}
+            />
+            <InputFC
+              required
+              type={'text'}
+              value={itemTitle}
+              setState={setItemTitle}
+              placeholder={'Nome do item de coleta'}
+            />
+            <BtnForm type="submit">Atualizar ítem de coleta</BtnForm>
           </ModalForm>
           {statusMessage && <StatusMessage>{statusMessage}</StatusMessage>}
         </Modal>
