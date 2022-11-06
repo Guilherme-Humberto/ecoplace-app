@@ -5,7 +5,7 @@ export const Container = styled.footer`
     align-items: center;
     justify-content: center;
     padding: 20px;
-    border-top: 1px solid #ccccd0;
     max-width: 1400px;
     margin: 30px auto 0 auto;
+    border-top: 1px solid ${props => props.theme.colors.gray3};
 `
