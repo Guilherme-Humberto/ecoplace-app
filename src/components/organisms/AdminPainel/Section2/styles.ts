@@ -1,6 +1,7 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 import ReactSelect from 'react-select'
 import { Splide, SplideSlide } from '@splidejs/react-splide'
+import { StyleButton } from '@components/atoms/Button/styles'
 
 export const customSelectStyles = {
   control: (base: any, state: any) => ({
@@ -17,7 +18,7 @@ export const customSelectStyles = {
 
 export const Container = styled.section`
   margin-top: 40px;
-`;
+`
 export const Constraint = styled.div``
 export const Column = styled.div``
 export const Title = styled.h3`
@@ -49,7 +50,17 @@ export const ModalTitles = styled.div`
   display: flex;
   flex-direction: column;
 `
-export const ModalForm = styled.form``
+export const ModalForm = styled.form`
+  strong {
+    font-weight: 500;
+    border-top: 2px solid ${props => props.theme.colors.gray};
+    padding-top: 20px;
+  }
+
+  small {
+    color: ${props => props.theme.colors.gray2}
+  }
+`
 export const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
@@ -62,4 +73,46 @@ export const InputGruopGrid = styled.div`
 `
 export const SelectState = styled(ReactSelect)`
   margin: 20px 0;
+`
+export const AddresBlock = styled.div``
+export const CollectionItemList = styled.div`
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+`
+export const CollectionItemCard = styled.div`
+  position: relative;
+  padding: 10px 20px;
+  border-radius: 100px;
+  width: fit-content;
+  font-size: 14px;
+  background: ${props => props.theme.colors.gray};
+`
+
+export const CollectionItemBtnRemove = styled.button`
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 20px;
+  height: 20px;
+  border: none;
+  outline: none;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: ${props => props.theme.colors.white};
+  background: ${props => props.theme.colors.primary};
+
+  &:hover {
+    cursor: pointer;
+  }
+`
+export const ButtonForm = styled.button`
+  ${StyleButton}
+  border: none;
+  outline: none;
+  margin-top: 40px;
 `

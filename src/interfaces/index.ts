@@ -1,6 +1,6 @@
 export interface ISelectOptions {
   label: string
-  value: number
+  value: string | number
 }
 
 interface IAddrsses {
@@ -24,6 +24,8 @@ export interface ICollectionsCenter {
   image: string
   phone: string
   email: string
+  mesoregion_id?: number
+  microregion_id?: number
   addresses: IAddrsses[]
   items: { id: string, title: string }[]
 }

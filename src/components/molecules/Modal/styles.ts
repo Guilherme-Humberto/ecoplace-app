@@ -19,6 +19,10 @@ export const WrapperChildren = styled.div`
   background: ${props => props.theme.colors.white};
   max-width: 900px;
   border-radius: 5px;
+
+  &::-webkit-scrollbar {
+    background: transparent;
+  }
 `
 
 export const CloseBtn = styled.div`

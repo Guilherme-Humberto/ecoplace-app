@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { FiLogIn } from 'react-icons/fi'
 import ButtonFC from '@components/atoms/Button'
 import InputFC from '@components/atoms/Input'
-import { getMicroregions, getStates } from '@helpers/getRegions'
+import { getMicroregions, getMesoRegions } from '@helpers/getRegions'
 import { ISelectOptions } from '@interfaces/index'
 import {
   Container,
@@ -35,7 +35,7 @@ const HomeSec1FC: React.FC = () => {
   )
 
   const getStateOptions = async () => {
-    const dataState = await getStates()
+    const dataState = await getMesoRegions()
     return setStateOptions(dataState)
   }
 

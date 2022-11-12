@@ -5,6 +5,7 @@ import { Container, WrapperChildren, CloseBtn } from './styles'
 interface IModal {
   minWidth: string
   maxWidth: string
+  maxHeight?: string
   withScroll?: boolean
   event(): void
 }
@@ -12,6 +13,7 @@ interface IModal {
 const Modal: React.FC<IModal> = ({
   minWidth,
   maxWidth,
+  maxHeight,
   withScroll,
   event,
   children
@@ -22,6 +24,7 @@ const Modal: React.FC<IModal> = ({
         style={{
           minWidth,
           maxWidth,
+          maxHeight,
           overflowY: withScroll ? 'scroll' : 'hidden'
         }}
       >
