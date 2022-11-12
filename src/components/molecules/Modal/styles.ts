@@ -7,6 +7,7 @@ export const Container = styled.div`
   right: 0;
   bottom: 0;
   background: #6c6c80b5;
+  z-index: 99;
 
   display: grid;
   place-items: center;

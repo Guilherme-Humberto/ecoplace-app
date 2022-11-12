@@ -74,7 +74,7 @@ const AdminPainelSec1FC: React.FC = () => {
         title: itemTitle,
         image: itemImage
       })
-      .then(response => {
+      .then(() => {
         closeModalAndClearState()
         getCollectionItems()
       })
@@ -96,7 +96,7 @@ const AdminPainelSec1FC: React.FC = () => {
       }, {
         params: { id: itemId }
       })
-      .then(response => {
+      .then(() => {
         closeModalAndClearState()
         getCollectionItems()
       })

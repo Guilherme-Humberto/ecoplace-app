@@ -5,14 +5,12 @@ import { StyleButton } from '@components/atoms/Button/styles'
 export const Container = styled.section`
   margin-top: 40px;
 `
-
 export const Constraint = styled.div``
 export const Column = styled.div``
 export const Title = styled.h3`
-    margin-bottom: 20px;
-    font-weight: 500;
+  margin-bottom: 20px;
+  font-weight: 500;
 `
-
 export const ListOfItems = styled.div`
   display: grid;
   grid-template-columns: 1fr 200px;
@@ -43,17 +41,19 @@ export const ButtonNewItem = styled.div`
   }
 `
 export const ModalTitles = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 `
 export const ModalForm = styled.form``
 export const BtnForm = styled.button<{ outline?: boolean }>`
-    ${StyleButton};
-    border: none;
-    outline: none;
-    margin-top: 10px;
+  ${StyleButton};
+  border: none;
+  outline: none;
+  margin-top: 10px;
 
-    ${props => props.outline && css`
+  ${props =>
+    props.outline &&
+    css`
       background: transparent;
       border: 2px solid ${props => props.theme.colors.secondary};
       color: ${props => props.theme.colors.secondary};
