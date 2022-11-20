@@ -3,7 +3,7 @@ import { Container, Label, Input } from './styles'
 
 interface IInput {
   label?: string
-  value: string
+  value: string | number
   placeholder: string
   setState: any
   required?: boolean

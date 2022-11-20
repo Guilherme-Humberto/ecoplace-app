@@ -17,7 +17,7 @@ export const WrapperChildren = styled.div`
   position: relative;
   padding: 60px 40px;
   background: ${props => props.theme.colors.white};
-  max-width: 900px;
+  width: 100%;
   border-radius: 5px;
 
   &::-webkit-scrollbar {

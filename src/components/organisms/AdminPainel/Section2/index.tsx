@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import { AiOutlineClose } from 'react-icons/ai'
+import React, { useState, useEffect, FormEvent } from 'react'
 import { applicationApi } from '@api/index'
 import Modal from '@components/molecules/Modal'
+import { ModalSubTitle, ModalTitle } from '@components/molecules/Modal/styles'
 import {
   ICollectionsCenter,
   ISelectOptions,
   ICollectionItems
 } from '@interfaces/index'
-import { ModalSubTitle, ModalTitle } from '@components/molecules/Modal/styles'
 import {
   getMicroRegionById,
   getMesoRegionById,
@@ -23,27 +22,13 @@ import {
   ListOfCollections,
   CollectionCenterCard,
   ModalTitles,
-  ModalForm,
-  InputGroup,
-  InputGruopGrid,
-  SelectState,
-  customSelectStyles,
-  AddresBlock,
-  CollectionItemList,
-  CollectionItemCard,
-  CollectionItemBtnRemove,
-  ButtonForm
+  ButtonNewItem
 } from './styles'
-import InputFC from '@components/atoms/Input'
+import ModalUpdate from './Forms/Update'
+import ModalCreate from './Forms/Create'
 
 const AdminPainelSec2FC: React.FC = () => {
   const [modalAction, setModalAction] = useState<string>('')
-
-  const [name, setName] = useState<string>('')
-  const [image, setImage] = useState<string>('')
-  const [email, setEmail] = useState<string>('')
-  const [phone, setPhone] = useState<string>('')
-  const [description, setDescription] = useState<string>('')
 
   const [collectionsCenterOptions, setCollectionsCenterOptions] = useState<ICollectionsCenter[]>([])
   const [collectionCenter, setCollectionCenter] = useState<ICollectionsCenter | null>(null)
@@ -52,7 +37,6 @@ const AdminPainelSec2FC: React.FC = () => {
   const [stateOptions, setStateOptions] = useState<ISelectOptions[]>([])
   const [cityOptions, setCityOptions] = useState([])
 
-  const [collectionItemValues, setCollectionItemValues] = useState<ISelectOptions[]>([])
   const [stateValue, setStateValue] = useState<ISelectOptions>({} as ISelectOptions)
   const [cityValue, setCityValue] = useState<ISelectOptions>({} as ISelectOptions)
 
@@ -68,10 +52,11 @@ const AdminPainelSec2FC: React.FC = () => {
       `/collectionItem/listAll`
     )
 
-    const formatedResponse = collectionsItem.map(item => ({
+    const formatedResponse = collectionsItem.map((item: ICollectionItems) => ({
       value: item.id,
       label: item.title
     }))
+
     return setCollectionsItemOptions(formatedResponse)
   }
 
@@ -97,42 +82,16 @@ const AdminPainelSec2FC: React.FC = () => {
     return setStateValue(mesoRegionResponse)
   }
 
-  const addCollectionsItem = (newItem: ISelectOptions) => {
-    const itemAlreadyExists = collectionItemValues.find(
-      item => item.value == newItem.value
-    )
-    if (!itemAlreadyExists)
-      return setCollectionItemValues(state => [...state, newItem])
-  }
-
-  const removeCollectionsItem = (itemId: string) => {
-    const filterItemsDifferents = collectionItemValues.filter(
-      item => item.value !== itemId
-    )
-    return setCollectionItemValues(filterItemsDifferents)
-  }
-
-  const openModalUpdate = (
-    item: ICollectionsCenter,
-    mesoRegionId: number,
-    microRegionId: number
-  ) => {
+  const openModalUpdate = (item: ICollectionsCenter) => {
     setCollectionCenter(item)
-    getStateOptionInCollectionCenter(mesoRegionId)
-    getCityOptionInCollectionCenter(microRegionId)
+    getStateOptionInCollectionCenter(Number(item.mesoregion_id))
+    getCityOptionInCollectionCenter(Number(item.microregion_id))
+    return setModalAction('update')
+  }
 
-    setName(item.name)
-    setImage(item.image)
-    setEmail(item.email)
-    setPhone(item.phone)
-    setDescription(item.description)
-
-    const formatedCollectionItems = item.items.map(item => ({
-      value: item.id,
-      label: item.title
-    }))
-
-    setCollectionItemValues(formatedCollectionItems)
+  const openModalCreate = () => {
+    setCollectionCenter({} as ICollectionsCenter)
+    return setModalAction('create')
   }
 
   useEffect(() => {
@@ -151,20 +110,14 @@ const AdminPainelSec2FC: React.FC = () => {
         <Constraint>
           <Column>
             <Title>Pontos de coleta</Title>
+            <ButtonNewItem onClick={openModalCreate}>Novo Ponto de coleta</ButtonNewItem>
           </Column>
           <Column>
             <ListOfCollections>
               {collectionsCenterOptions.map((item, index) => (
                 <CollectionCenterCard
                   key={index}
-                  onClick={() => {
-                    openModalUpdate(
-                      item,
-                      Number(item.mesoregion_id),
-                      Number(item.microregion_id)
-                    )
-                    setModalAction('update')
-                  }}
+                  onClick={() => openModalUpdate(item)}
                 >
                   <Title>{item.name}</Title>
                   <Description>{item.description}</Description>
@@ -176,135 +129,60 @@ const AdminPainelSec2FC: React.FC = () => {
       </Container>
       {modalAction == 'update' && (
         <Modal
-          minWidth={'800px'}
-          maxWidth={'800px'}
+          minWidth={'1100px'}
+          maxWidth={'1100px'}
           maxHeight={'90%'}
           withScroll
-          event={() => setModalAction('')}
+          event={() => {
+            setModalAction('')
+          }}
         >
           <ModalTitles>
             <ModalTitle>Atualizar ponto de coleta</ModalTitle>
             <ModalSubTitle>Atualizar ponto de coleta</ModalSubTitle>
           </ModalTitles>
 
-          <ModalForm>
-            <InputGroup>
-              <strong>Dados</strong>
-              <small>Edite as informações do ponto de coleta</small>
-              <InputFC
-                required
-                type={'text'}
-                value={image}
-                setState={setImage}
-                placeholder={'Imagem do ponto de coleta'}
-              />
-              <InputFC
-                required
-                type={'text'}
-                value={name}
-                setState={setName}
-                placeholder={'Nome do ponto de coleta'}
-              />
-              <InputFC
-                required
-                type={'text'}
-                value={description}
-                setState={setDescription}
-                placeholder={'Descrição'}
-              />
-              <InputGruopGrid>
-                <InputFC
-                  required
-                  type={'email'}
-                  value={email}
-                  setState={setEmail}
-                  placeholder={'E-mail'}
-                />
-                <InputFC
-                  required
-                  type={'text'}
-                  value={phone}
-                  setState={setPhone}
-                  placeholder={'Whatsapp'}
-                />
-              </InputGruopGrid>
-            </InputGroup>
-            <InputGroup>
-              <strong>Endereço</strong>
-              <small>Edite os endereços do ponto de coleta</small>
-              {collectionCenter?.addresses?.map(item => (
-                <AddresBlock key={item.id}>
-                  <InputGruopGrid>
-                    <SelectState
-                      value={stateValue}
-                      options={stateOptions}
-                      styles={customSelectStyles}
-                      placeholder="Selecione o estado"
-                      onChange={option =>
-                        setStateValue(option as ISelectOptions)
-                      }
-                    />
-                    <SelectState
-                      value={cityValue}
-                      options={cityOptions}
-                      styles={customSelectStyles}
-                      onChange={option =>
-                        setCityValue(option as ISelectOptions)
-                      }
-                      placeholder="Selecione o cidade"
-                    />
-                  </InputGruopGrid>
-                  <InputFC
-                    required
-                    type={'text'}
-                    value={item.zip_code}
-                    setState={() => {}}
-                    placeholder={'CEP'}
-                  />
-                  <InputGruopGrid>
-                    <InputFC
-                      required
-                      type={'text'}
-                      value={item.addrs_name}
-                      setState={() => {}}
-                      placeholder={'Logradouro'}
-                    />
-                    <InputFC
-                      required
-                      type={'text'}
-                      value={String(item.addrs_number)}
-                      setState={() => {}}
-                      placeholder={'Número'}
-                    />
-                  </InputGruopGrid>
-                </AddresBlock>
-              ))}
-            </InputGroup>
-            <InputGroup>
-              <strong>Items de coleta</strong>
-              <small>Remove o adicione novos items de coleta</small>
-              <SelectState
-                value={collectionItemValues}
-                options={collectionsItemOptions}
-                styles={customSelectStyles}
-                placeholder="Selecione o item de coleta"
-                onChange={(option: any) => addCollectionsItem(option)}
-              />
-              <CollectionItemList>
-                {collectionItemValues?.map(item => (
-                  <CollectionItemCard key={item.value}>
-                    <CollectionItemBtnRemove
-                      onClick={() => removeCollectionsItem(String(item.value))}
-                    >
-                      <AiOutlineClose size={13} />
-                    </CollectionItemBtnRemove>
-                    <small>{item.label}</small>
-                  </CollectionItemCard>
-                ))}
-              </CollectionItemList>
-            </InputGroup>
-            <ButtonForm>Salver alterações</ButtonForm>
-          </ModalForm>
+          <ModalUpdate
+            item={collectionCenter as ICollectionsCenter}
+            stateValue={stateValue}
+            stateOptions={stateOptions}
+            cityValue={cityValue}
+            cityOptions={cityOptions}
+            setStateValue={setStateValue}
+            setCityValue={setCityValue}
+            setModalAction={setModalAction}
+            getCollectionsCenter={getCollectionsCenter}
+            collectionsItemOptions={collectionsItemOptions}
+          />
+        </Modal>
+      )}
+      {modalAction == 'create' && (
+        <Modal
+          minWidth={'1100px'}
+          maxWidth={'1100px'}
+          maxHeight={'90%'}
+          withScroll
+          event={() => {
+            setModalAction('')
+          }}
+        >
+          <ModalTitles>
+            <ModalTitle>Criar novo ponto de coleta</ModalTitle>
+            <ModalSubTitle>Criar ponto de coleta</ModalSubTitle>
+          </ModalTitles>
+
+          <ModalCreate
+            item={collectionCenter as ICollectionsCenter}
+            stateValue={stateValue}
+            stateOptions={stateOptions}
+            cityValue={cityValue}
+            cityOptions={cityOptions}
+            setStateValue={setStateValue}
+            setCityValue={setCityValue}
+            setModalAction={setModalAction}
+            getCollectionsCenter={getCollectionsCenter}
+            collectionsItemOptions={collectionsItemOptions}
+          />
         </Modal>
       )}
     </>

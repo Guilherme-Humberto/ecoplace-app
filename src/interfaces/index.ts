@@ -3,7 +3,7 @@ export interface ISelectOptions {
   value: string | number
 }
 
-interface IAddrsses {
+export interface IAddrsses {
   id: string
   addrs_name: string
   addrs_number: number
@@ -19,6 +19,7 @@ export interface ICollectionItems {
 }
 
 export interface ICollectionsCenter {
+  id: string
   name: string
   description: string
   image: string

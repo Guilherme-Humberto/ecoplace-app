@@ -22,7 +22,6 @@ const Modal: React.FC<IModal> = ({
     <Container>
       <WrapperChildren
         style={{
-          minWidth,
           maxWidth,
           maxHeight,
           overflowY: withScroll ? 'scroll' : 'hidden'

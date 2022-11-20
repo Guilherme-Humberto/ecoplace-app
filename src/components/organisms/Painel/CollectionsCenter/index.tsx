@@ -30,9 +30,7 @@ const CollectionsCenterFC: React.FC<ICollectionsCenterFC> = ({
 }) => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
-  const [collectionsCenter, setCollectionsCenter] = useState<
-    ICollectionsCenter[]
-  >([])
+  const [collectionsCenter, setCollectionsCenter] = useState<ICollectionsCenter[]>([])
 
   const getCollectionsCenter = async () => {
     setIsLoading(true)
@@ -87,7 +85,7 @@ const CollectionsCenterFC: React.FC<ICollectionsCenterFC> = ({
 
   return (
     <Container>
-      {collectionDetailsMock.map((item, index) => (
+      {collectionsCenter.map((item, index) => (
         <ItemCard key={index}>
           <ImageWrapper>
             <Image
