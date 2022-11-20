@@ -43,6 +43,9 @@ export const SelectState = styled(ReactSelect)`
 `
 export const AddresBlock = styled.div``
 export const AddresTabItem = styled.div<{ open?: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 10px 20px;
   margin-top: 10px;
   border-radius: 5px;
