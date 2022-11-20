@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { FiLogIn } from 'react-icons/fi'
 import ButtonFC from '@components/atoms/Button'
 import InputFC from '@components/atoms/Input'
-import { getMicroregions, getStates } from '@helpers/getRegions'
+import { getMicroregions, getMesoRegions } from '@helpers/getRegions'
 import { ISelectOptions } from '@interfaces/index'
 import {
   Container,
@@ -24,6 +24,7 @@ const HomeSec1FC: React.FC = () => {
   const { setCityGlobalValue, setStateGlobalValue, setUserNameGlobalValue } =
     useAppContext()
 
+  const [userName, setUserName] = useState('')
   const [stateOptions, setStateOptions] = useState([])
   const [cityOptions, setCityOptions] = useState([])
   const [stateValue, setStateValue] = useState<ISelectOptions>(
@@ -32,10 +33,9 @@ const HomeSec1FC: React.FC = () => {
   const [cityValue, setCityValue] = useState<ISelectOptions>(
     {} as ISelectOptions
   )
-  const [userName, setUserName] = useState('')
 
   const getStateOptions = async () => {
-    const dataState = await getStates()
+    const dataState = await getMesoRegions()
     return setStateOptions(dataState)
   }
 
@@ -87,6 +87,7 @@ const HomeSec1FC: React.FC = () => {
             value={userName}
             setState={setUserName}
             placeholder="Qual seu nome?"
+            type={'text'}
           />
           <SelectState
             value={stateValue.value ? stateValue : null}
@@ -107,9 +108,9 @@ const HomeSec1FC: React.FC = () => {
             />
           )}
           <ButtonFC event={handleSubmit}>
-            <p className="text-with-icon">
+            <div className="text-with-icon">
               <FiLogIn size={30} /> Acessar o EcoPlace
-            </p>
+            </div>
           </ButtonFC>
         </Column>
       </Constraint>

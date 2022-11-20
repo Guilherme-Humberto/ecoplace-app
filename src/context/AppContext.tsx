@@ -1,10 +1,11 @@
 import { ISelectOptions } from '@interfaces/index'
+import { useRouter } from 'next/router'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
 interface AppContextProps {
   userNameGlobalValue: any
-  stateGlobalValue: any
-  cityGlobalValue: any
+  stateGlobalValue: ISelectOptions
+  cityGlobalValue: ISelectOptions
   setUserNameGlobalValue: any
   setStateGlobalValue: any
   setCityGlobalValue: any
@@ -13,6 +14,7 @@ interface AppContextProps {
 export const AppContext = createContext<AppContextProps>({} as AppContextProps)
 
 const AppProvider: React.FC = ({ children }) => {
+  const router = useRouter()
   const [userNameGlobalValue, setUserNameGlobalValue] = useState<string>('')
   const [stateGlobalValue, setStateGlobalValue] = useState<ISelectOptions>(
     {} as ISelectOptions
@@ -26,14 +28,19 @@ const AppProvider: React.FC = ({ children }) => {
     const regionStateItem = localStorage.getItem('region-state')
     const regionCityItem = localStorage.getItem('region-city')
 
-    setUserNameGlobalValue(String(userNameItem))
-    setStateGlobalValue(JSON.parse(JSON.stringify(regionStateItem)))
-    setCityGlobalValue(JSON.parse(JSON.stringify(regionCityItem)))
-  }
+    if (!userNameItem || !regionStateItem || !regionCityItem) {
+      return router.push('/')
+    }
 
+    setUserNameGlobalValue(String(userNameItem))
+    setStateGlobalValue(JSON.parse(String(regionStateItem)))
+    setCityGlobalValue(JSON.parse(String(regionCityItem)))
+    return
+  }
+  
   useEffect(() => {
     getValuesInStorage()
-  }, [])
+  }, [stateGlobalValue.value, cityGlobalValue.value])
 
   return (
     <AppContext.Provider

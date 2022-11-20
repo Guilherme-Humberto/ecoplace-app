@@ -1,18 +1,39 @@
-import React from 'react'
-import Link from 'next/link'
-import { FiGithub } from 'react-icons/fi'
-import ButtonFC from '@components/atoms/Button'
+import React, { FormEvent, useState } from 'react'
 import InputFC from '@components/atoms/Input'
+import { applicationApi } from '@api/index'
 import {
   Container,
   Column,
   Constraint,
   Text,
   Title,
-  GitHubLink
+  StatusMessage,
+  Form,
+  ButtonForm
 } from './styles'
 
 const HomeSec2FC: React.FC = () => {
+  const [name, setName] = useState<string>('')
+  const [email, setEmail] = useState<string>('')
+  const [statusMessage, setStatusMessage] = useState<string>(
+    'Preencha as informações acima.'
+  )
+
+  const handleRegisterContributor = async (event: FormEvent) => {
+    event.preventDefault()
+
+    if (name == '' || email == '') {
+      return alert('Preencha todas as informações')
+    }
+    applicationApi
+      .post('/contributor/create', { name, email })
+      .then(() => setStatusMessage('Oba, em breve entraremos em contato.'))
+      .catch(() => setStatusMessage('Erro ao cadastrar suas informações'))
+
+    setName('')
+    setEmail('')
+  }
+
   return (
     <Container>
       <Constraint>
@@ -35,19 +56,27 @@ const HomeSec2FC: React.FC = () => {
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </Text>
-            <Link href="/https://github.com/Guilherme-Humberto/ecoplace-app" passHref>
-              <GitHubLink target="_blank">
-                <FiGithub /> Visitar projeto
-              </GitHubLink>
-            </Link>
           </div>
-          <div>
-            <InputFC placeholder="Qual seu nome?" value="" />
-            <InputFC placeholder="Qual seu email?" value="" />
-            <ButtonFC>
-              <p>{':)'} Quero ser um contribuidor</p>
-            </ButtonFC>
-          </div>
+          <Form onSubmit={handleRegisterContributor}>
+            <InputFC
+              value={name}
+              setState={setName}
+              required
+              type="text"
+              placeholder="Qual seu nome?"
+            />
+            <InputFC
+              value={email}
+              setState={setEmail}
+              required
+              type="email"
+              placeholder="Qual seu email?"
+            />
+            <ButtonForm type="submit">Quero ser um contribuidor</ButtonForm>
+            {statusMessage !== '' && (
+              <StatusMessage>{statusMessage}</StatusMessage>
+            )}
+          </Form>
         </Column>
       </Constraint>
     </Container>

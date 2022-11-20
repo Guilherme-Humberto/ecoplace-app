@@ -10,6 +10,7 @@ export const theme = {
     white: '#ffffff',
     gray: '#F0F0F5',
     gray2: '#A0A0B2',
+    gray3: '#ccccd0',
     dark: '#000000',
     background: '#F6F6F6'
   },

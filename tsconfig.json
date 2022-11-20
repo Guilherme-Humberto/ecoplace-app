@@ -22,6 +22,8 @@
       "@interfaces/*": ["./interfaces/*"],
       "@api/*": ["./api/*"],
       "@styles/*": ["./styles/*"],
+      "@mocks/*": ["./mocks/*"],
+      "@context/*": ["./context/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
