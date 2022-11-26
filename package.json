@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "husky install",
+    "format": "pretty-quick --staged && git add ."
   },
   "dependencies": {
     "@splidejs/react-splide": "^0.7.12",
@@ -26,6 +28,9 @@
     "autoprefixer": "^10.4.1",
     "eslint": "7.30.0",
     "eslint-config-next": "11.0.1",
+    "husky": "^8.0.2",
+    "prettier": "^2.8.0",
+    "pretty-quick": "^3.1.3",
     "typescript": "4.3.5"
   }
 }

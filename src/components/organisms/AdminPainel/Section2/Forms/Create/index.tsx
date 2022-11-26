@@ -69,7 +69,6 @@ const ModalCreate: React.FC<IModalCreate> = ({
   >([])
 
   const openTabAddrsItem = () => {
-    console.log()
     setAddrsObj({} as IAddrsses)
   }
 
@@ -109,7 +108,7 @@ const ModalCreate: React.FC<IModalCreate> = ({
 
       await createCollectionCenter(collectionCenterData)
 
-      const registerAddrs = addrsObjArray.map(async (item) => {
+      const registerAddrs = addrsObjArray.map(async item => {
         const addrsId = generateUUID()
         await createCollectionAddrs({ id: addrsId, ...item })
 
@@ -121,7 +120,7 @@ const ModalCreate: React.FC<IModalCreate> = ({
         })
       })
 
-      const registerCollectionItems = collectionItemValues.map(async (item) => {
+      const registerCollectionItems = collectionItemValues.map(async item => {
         await createCollectionCenterItems({
           collection_center_id: uuIdCollectionCenter,
           collection_item_id: item.value
@@ -241,7 +240,9 @@ const ModalCreate: React.FC<IModalCreate> = ({
             </AddresTabItem>
           ))}
           {addrsObj == null && (
-            <button type="button" onClick={openTabAddrsItem}>Adicionar endereço</button>
+            <button type="button" onClick={openTabAddrsItem}>
+              Adicionar endereço
+            </button>
           )}
           {addrsObj !== null && (
             <AddresBlock>
@@ -297,7 +298,9 @@ const ModalCreate: React.FC<IModalCreate> = ({
                   />
                 </InputGruopGrid>
               </AddresTabWrapper>
-              <button type='button' onClick={addAddresses}>Salvar endereço</button>
+              <button type="button" onClick={addAddresses}>
+                Salvar endereço
+              </button>
             </AddresBlock>
           )}
         </InputGroup>
