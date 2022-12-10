@@ -72,8 +72,8 @@ const ModalCreate: React.FC<IModalCreate> = ({
     return await applicationApi.post(`/zone/create`, data)
   }
 
-  const createCollectionAddrs = async (data: IAddrsses) => {
-    return await applicationApi.post(`/collectionAddrs/create`, data, {
+  const createAddrs = async (data: IAddrsses) => {
+    return await applicationApi.post(`/address/create`, data, {
       params: {
         mesoregion_id: stateValue.value,
         microregion_id: cityValue.value
@@ -85,7 +85,7 @@ const ModalCreate: React.FC<IModalCreate> = ({
   }
 
   const createZonesCategories = async (data: object) => {
-    return await applicationApi.post(`/zone/items/create`, data)
+    return await applicationApi.post(`/zone/category/create`, data)
   }
 
   const handleSubmit = async (event: FormEvent) => {
@@ -106,20 +106,20 @@ const ModalCreate: React.FC<IModalCreate> = ({
 
       const registerAddrs = addrsObjArray.map(async item => {
         const addrsId = generateUUID()
-        await createCollectionAddrs({ id: addrsId, ...item })
+        await createAddrs({ id: addrsId, ...item })
 
         await createZonesAddrs({
           mesoregion_id: stateValue.value,
           microregion_id: cityValue.value,
           zone_id: uuIdCollectionCenter,
-          zone_addrs_id: addrsId
+          addrs_id: addrsId
         })
       })
 
       const registerCollectionItems = zonesValues.map(async item => {
         await createZonesCategories({
           zone_id: uuIdCollectionCenter,
-          zone_category_id: item.value
+          category_id: item.value
         })
       })
 
