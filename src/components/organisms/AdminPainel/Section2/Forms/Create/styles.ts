@@ -99,3 +99,28 @@ export const CategoryBtnRemove = styled.button`
     cursor: pointer;
   }
 `
+export const BtnAddAddress = styled.button`
+  ${StyleButton}
+  outline: none;
+  margin-top: 20px;
+  background: transparent;
+  color: ${props => props.theme.colors.green};
+  border: 2px solid ${props => props.theme.colors.green};
+
+  &:hover {
+    color: ${props => props.theme.colors.white};
+  }
+`
+
+export const BtnSaveAddrsInList = styled.button`
+  ${StyleButton}
+  outline: none;
+  margin-top: 20px;
+  background: transparent;
+  color: ${props => props.theme.colors.green};
+  border: 2px solid ${props => props.theme.colors.green};
+
+  &:hover {
+    color: ${props => props.theme.colors.white};
+  }
+`

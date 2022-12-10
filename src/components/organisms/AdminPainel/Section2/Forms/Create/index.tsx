@@ -3,11 +3,7 @@ import { AiOutlineClose } from 'react-icons/ai'
 import InputFC from '@components/atoms/Input'
 import { applicationApi } from '@api/index'
 import { generateUUID } from '@helpers/generateUUID'
-import {
-  IAddrsses,
-  ICollectionsCenter,
-  ISelectOptions
-} from '@interfaces/index'
+import { IAddrsses, IZone, ISelectOptions } from '@interfaces/index'
 import {
   Container,
   InputGroup,
@@ -21,11 +17,13 @@ import {
   CategoryCard,
   CategoryBtnRemove,
   ButtonForm,
-  ModalForm
+  ModalForm,
+  BtnAddAddress,
+  BtnSaveAddrsInList
 } from './styles'
 
 interface IModalCreate {
-  item: ICollectionsCenter
+  item: IZone
   stateValue: ISelectOptions
   stateOptions: ISelectOptions[]
   cityValue: ISelectOptions
@@ -236,9 +234,9 @@ const ModalCreate: React.FC<IModalCreate> = ({
             </AddresTabItem>
           ))}
           {addrsObj == null && (
-            <button type="button" onClick={openTabAddrsItem}>
+            <BtnAddAddress type="button" onClick={openTabAddrsItem}>
               Adicionar endereço
-            </button>
+            </BtnAddAddress>
           )}
           {addrsObj !== null && (
             <AddresBlock>
@@ -294,9 +292,9 @@ const ModalCreate: React.FC<IModalCreate> = ({
                   />
                 </InputGroupGrid>
               </AddresTabWrapper>
-              <button type="button" onClick={addAddresses}>
+              <BtnSaveAddrsInList type="button" onClick={addAddresses}>
                 Salvar endereço
-              </button>
+              </BtnSaveAddrsInList>
             </AddresBlock>
           )}
         </InputGroup>

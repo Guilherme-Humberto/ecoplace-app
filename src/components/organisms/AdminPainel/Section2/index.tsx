@@ -1,4 +1,5 @@
 import React, { useState, useEffect, FormEvent } from 'react'
+import { RiCloseFill } from 'react-icons/ri'
 import { applicationApi } from '@api/index'
 import Modal from '@components/molecules/Modal'
 import { ModalSubTitle, ModalTitle } from '@components/molecules/Modal/styles'
@@ -20,7 +21,9 @@ import {
   ListOfZonesCarrousel,
   ZoneCard,
   ModalTitles,
-  ButtonNewItem
+  ButtonNewItem,
+  ZoneItemSlide,
+  ZoneBtnRemove
 } from './styles'
 
 const AdminPainelSec2FC: React.FC = () => {
@@ -58,6 +61,13 @@ const AdminPainelSec2FC: React.FC = () => {
     }))
 
     return setCategoriesOptions(formatedResponse)
+  }
+
+  const removeZone = async (zoneId: string) => {
+    // return await applicationApi.delete(
+    //   `/zone/delete?id=${zoneId}`
+    // )
+    alert('TESTE')
   }
 
   const getMesoRegionsOptions = async () => {
@@ -116,11 +126,16 @@ const AdminPainelSec2FC: React.FC = () => {
           </Column>
           <Column>
             <ListOfZonesCarrousel>
-              {zoneOptions.map((item, index) => (
-                <ZoneCard key={index} onClick={() => openModalUpdate(item)}>
-                  <Title>{item.name}</Title>
-                  <Description>{item.description}</Description>
-                </ZoneCard>
+              {zoneOptions.map((znone, index) => (
+                <ZoneItemSlide key={index}>
+                  <ZoneBtnRemove onClick={() => removeZone(znone.id)}>
+                    <RiCloseFill size={14} />
+                  </ZoneBtnRemove>
+                  <ZoneCard onClick={() => openModalUpdate(znone)}>
+                    <Title>{znone.name}</Title>
+                    <Description>{znone.description}</Description>
+                  </ZoneCard>
+                </ZoneItemSlide>
               ))}
             </ListOfZonesCarrousel>
           </Column>
