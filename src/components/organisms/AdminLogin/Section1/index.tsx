@@ -32,9 +32,9 @@ const AdminLoginSec1FC: React.FC = () => {
     applicationApi
       .post('/admin/login', { email, password })
       .then(response => {
-        const { name } = response.data
-        localStorage.setItem('user-name', name)
-        setUserNameGlobalValue(name)
+        const user = response.data
+        localStorage.setItem('user-name', user.data.name)
+        setUserNameGlobalValue(user.data.name)
 
         router.push('/painel/admin')
       })

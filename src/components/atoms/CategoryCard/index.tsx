@@ -10,7 +10,7 @@ interface ICollectionItem {
   active?: boolean
 }
 
-const CollectionItemCard: React.FC<ICollectionItem> = ({
+const CategoryCard: React.FC<ICollectionItem> = ({
   id,
   image,
   slug,
@@ -25,4 +25,4 @@ const CollectionItemCard: React.FC<ICollectionItem> = ({
   )
 }
 
-export default CollectionItemCard
+export default CategoryCard

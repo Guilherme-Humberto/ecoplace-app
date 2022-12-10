@@ -33,7 +33,7 @@ export const InputGroup = styled.div`
   flex-direction: column;
   margin: 20px 0 10px 0;
 `
-export const InputGruopGrid = styled.div`
+export const InputGroupGrid = styled.div`
   display: grid;
   gap: 20px;
   grid-template-columns: 1fr 1fr;
@@ -62,13 +62,13 @@ export const ButtonForm = styled.button`
   outline: none;
   margin-top: 40px;
 `
-export const CollectionItemList = styled.div`
+export const CategoriesList = styled.div`
   display: flex;
   gap: 20px;
   align-items: center;
   flex-wrap: wrap;
 `
-export const CollectionItemCard = styled.div`
+export const CategoryCard = styled.div`
   position: relative;
   padding: 10px 20px;
   border-radius: 100px;
@@ -77,7 +77,7 @@ export const CollectionItemCard = styled.div`
   background: ${props => props.theme.colors.gray};
 `
 
-export const CollectionItemBtnRemove = styled.button`
+export const CategoryBtnRemove = styled.button`
   position: absolute;
   top: -5px;
   right: -5px;

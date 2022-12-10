@@ -1,6 +1,7 @@
 import React, { useState, useEffect, FormEvent } from 'react'
 import { AiOutlineClose } from 'react-icons/ai'
 import InputFC from '@components/atoms/Input'
+import { applicationApi } from '@api/index'
 import {
   IAddrsses,
   ICollectionsCenter,
@@ -9,19 +10,18 @@ import {
 import {
   Container,
   InputGroup,
-  InputGruopGrid,
+  InputGroupGrid,
   SelectState,
   customSelectStyles,
   AddresBlock,
   AddresTabWrapper,
   AddresTabItem,
-  CollectionItemList,
-  CollectionItemCard,
-  CollectionItemBtnRemove,
+  CategoriesList,
+  CategoryCard,
+  CategoryBtnRemove,
   ButtonForm,
   ModalForm
 } from './styles'
-import { applicationApi } from '@api/index'
 
 interface IModalUpdate {
   item: ICollectionsCenter
@@ -29,8 +29,8 @@ interface IModalUpdate {
   stateOptions: ISelectOptions[]
   cityValue: ISelectOptions
   cityOptions: ISelectOptions[]
-  collectionsItemOptions: any[]
-  getCollectionsCenter: () => void
+  categoriesOptions: any[]
+  getZones: () => void
   setStateValue: React.Dispatch<React.SetStateAction<ISelectOptions>>
   setCityValue: React.Dispatch<React.SetStateAction<ISelectOptions>>
   setModalAction: React.Dispatch<React.SetStateAction<string>>
@@ -44,9 +44,9 @@ const ModalUpdate: React.FC<IModalUpdate> = ({
   cityValue,
   cityOptions,
   setCityValue,
-  getCollectionsCenter,
+  getZones,
   setModalAction,
-  collectionsItemOptions
+  categoriesOptions
 }) => {
   const [name, setName] = useState<string>('')
   const [image, setImage] = useState<string>('')
@@ -59,8 +59,8 @@ const ModalUpdate: React.FC<IModalUpdate> = ({
   const [addrsZipCode, setAddrsZipCode] = useState<string>('')
   const [addrsDistrict, setAddrsDistrict] = useState<string>('')
   const [addrsObj, setAddrsObj] = useState<IAddrsses | null>({} as IAddrsses)
-  const [collectionItemValues, setCollectionItemValues] = useState<ISelectOptions[]>([])
-  const [delCollectionItemValues, setDelCollectionItemValues] = useState<string[]>([])
+  const [categoriesValues, setCategoriesValues] = useState<ISelectOptions[]>([])
+  const [delCategoriesValues, setDelCategoriesValues] = useState<string[]>([])
 
   const openTabAddrsItem = (item: IAddrsses) => {
     setAddrsName(item.addrs_name)
@@ -77,21 +77,21 @@ const ModalUpdate: React.FC<IModalUpdate> = ({
     setDescription(item.description)
     setAddrsObj(null)
 
-    const formatedCollectionItems = item.items.map(item => ({
+    const formatedCategories = item.items.map(item => ({
       value: item.id,
       label: item.title
     }))
 
-    setCollectionItemValues(formatedCollectionItems)
+    setCategoriesValues(formatedCategories)
   }
 
-  const updateCollectionCenter = async (data: object) => {
-    return await applicationApi.put(`/collectionCenter/update`, data, {
+  const updateZone = async (data: object) => {
+    return await applicationApi.put(`/zone/update`, data, {
       params: { id: item?.id }
     })
   }
 
-  const updateCollectionCenterAddrs = async (data: object) => {
+  const updateZoneAddrs = async (data: object) => {
     return await applicationApi.put(`/collectionAddrs/update`, data, {
       params: {
         collection_addrs_id: addrsObj?.id,
@@ -100,23 +100,31 @@ const ModalUpdate: React.FC<IModalUpdate> = ({
     })
   }
 
-  const updateCollectionCenterItems = async (data: string[]) => {
-    return await applicationApi.put(`/collectionCenter/items/update`, { data }, {
-      params: { id: item?.id }
-    })
+  const updateZoneCategories = async (data: string[]) => {
+    return await applicationApi.put(
+      `/zone/items/update`,
+      { data },
+      {
+        params: { id: item?.id }
+      }
+    )
   }
 
-  const removeCollectionCenterItems = async (data: string[]) => {
-    return await applicationApi.put(`/collectionCenter/items/delete`, { data }, {
-      params: { id: item?.id }
-    })
+  const removeZoneCategories = async (data: string[]) => {
+    return await applicationApi.put(
+      `/zone/items/delete`,
+      { data },
+      {
+        params: { id: item?.id }
+      }
+    )
   }
 
   const handleSubmit = async (event: FormEvent) => {
     try {
       event.preventDefault()
 
-      const collectionAddrsData = {
+      const zoneAddrsData = {
         addrs_name: addrsName,
         zip_code: addrsZipCode,
         district: addrsDistrict,
@@ -133,29 +141,29 @@ const ModalUpdate: React.FC<IModalUpdate> = ({
         description
       }
 
-      await updateCollectionCenter(collectionCenterData)
+      await updateZone(collectionCenterData)
 
       if (addrsObj !== null) {
-        await updateCollectionCenterAddrs(collectionAddrsData)
+        await updateZoneAddrs(zoneAddrsData)
       }
 
       const aditionalItems: any = []
 
-      collectionItemValues.map((itemData, index) => {
+      categoriesValues.map((itemData, index) => {
         if (itemData.value !== item.items[index]?.id) {
-          aditionalItems.push(collectionItemValues[index].value)
+          aditionalItems.push(categoriesValues[index].value)
         }
       })
 
       if (aditionalItems.length > 0) {
-        await updateCollectionCenterItems(aditionalItems)
+        await updateZoneCategories(aditionalItems)
       }
 
-      if (delCollectionItemValues.length > 0) {
-        await removeCollectionCenterItems(delCollectionItemValues)
+      if (delCategoriesValues.length > 0) {
+        await removeZoneCategories(delCategoriesValues)
       }
 
-      getCollectionsCenter()
+      getZones()
       return setModalAction('')
     } catch (error) {
       console.log(error)
@@ -163,20 +171,20 @@ const ModalUpdate: React.FC<IModalUpdate> = ({
   }
 
   const addCollectionsItem = (newItem: ISelectOptions) => {
-    const itemAlreadyExists = collectionItemValues.find(
+    const itemAlreadyExists = categoriesValues.find(
       item => item.value == newItem.value
     )
     if (!itemAlreadyExists) {
-      return setCollectionItemValues(state => [...state, newItem])
+      return setCategoriesValues(state => [...state, newItem])
     }
   }
 
-  const removeCollectionsItem = (itemId: string) => {
-    const filterItemsDifferents = collectionItemValues.filter(
+  const removeCategories = (itemId: string) => {
+    const filterItemsDifferents = categoriesValues.filter(
       item => item.value !== itemId
     )
-    setDelCollectionItemValues(state => [...state, itemId])
-    return setCollectionItemValues(filterItemsDifferents)
+    setDelCategoriesValues(state => [...state, itemId])
+    return setCategoriesValues(filterItemsDifferents)
   }
 
   useEffect(() => {
@@ -188,20 +196,20 @@ const ModalUpdate: React.FC<IModalUpdate> = ({
       <ModalForm onSubmit={handleSubmit}>
         <InputGroup>
           <strong>Dados</strong>
-          <small>Edite as informações do ponto de coleta</small>
+          <small>Edite as informações das zonas de coleta</small>
           <InputFC
             required
             type={'text'}
             value={image}
             setState={setImage}
-            placeholder={'Imagem do ponto de coleta'}
+            placeholder={'Imagem da zona de coleta'}
           />
           <InputFC
             required
             type={'text'}
             value={name}
             setState={setName}
-            placeholder={'Nome do ponto de coleta'}
+            placeholder={'Nome da zona de coleta'}
           />
           <InputFC
             required
@@ -210,7 +218,7 @@ const ModalUpdate: React.FC<IModalUpdate> = ({
             setState={setDescription}
             placeholder={'Descrição'}
           />
-          <InputGruopGrid>
+          <InputGroupGrid>
             <InputFC
               required
               type={'email'}
@@ -225,11 +233,11 @@ const ModalUpdate: React.FC<IModalUpdate> = ({
               setState={setPhone}
               placeholder={'Whatsapp'}
             />
-          </InputGruopGrid>
+          </InputGroupGrid>
         </InputGroup>
         <InputGroup>
           <strong>Endereço</strong>
-          <small>Edite os endereços do ponto de coleta</small>
+          <small>Edite os endereços da zona de coleta</small>
           {item.addresses?.map(item => (
             <AddresBlock key={item.id}>
               <AddresTabItem
@@ -242,7 +250,7 @@ const ModalUpdate: React.FC<IModalUpdate> = ({
                 {item.addrs_name}
               </AddresTabItem>
               <AddresTabWrapper open={addrsObj !== null}>
-                <InputGruopGrid>
+                <InputGroupGrid>
                   <SelectState
                     value={stateValue}
                     options={stateOptions}
@@ -257,8 +265,8 @@ const ModalUpdate: React.FC<IModalUpdate> = ({
                     onChange={option => setCityValue(option as ISelectOptions)}
                     placeholder="Selecione o cidade"
                   />
-                </InputGruopGrid>
-                <InputGruopGrid>
+                </InputGroupGrid>
+                <InputGroupGrid>
                   <InputFC
                     type={'text'}
                     value={addrsZipCode}
@@ -271,8 +279,8 @@ const ModalUpdate: React.FC<IModalUpdate> = ({
                     setState={setAddrsDistrict}
                     placeholder={'Bairro'}
                   />
-                </InputGruopGrid>
-                <InputGruopGrid>
+                </InputGroupGrid>
+                <InputGroupGrid>
                   <InputFC
                     type={'text'}
                     value={addrsName}
@@ -285,33 +293,33 @@ const ModalUpdate: React.FC<IModalUpdate> = ({
                     setState={seAddrsNumber}
                     placeholder={'Número'}
                   />
-                </InputGruopGrid>
+                </InputGroupGrid>
               </AddresTabWrapper>
             </AddresBlock>
           ))}
         </InputGroup>
         <InputGroup>
           <strong>Items de coleta</strong>
-          <small>Remove o adicione novos items de coleta</small>
+          <small>Remove o adicione novas categorias</small>
           <SelectState
-            value={collectionItemValues}
-            options={collectionsItemOptions}
+            value={categoriesValues}
+            options={categoriesOptions}
             styles={customSelectStyles}
-            placeholder="Selecione o item de coleta"
+            placeholder="Selecione a categoria"
             onChange={(option: any) => addCollectionsItem(option)}
           />
-          <CollectionItemList>
-            {collectionItemValues?.map(item => (
-              <CollectionItemCard key={item.value}>
-                <CollectionItemBtnRemove
-                  onClick={() => removeCollectionsItem(String(item.value))}
+          <CategoriesList>
+            {categoriesValues?.map(item => (
+              <CategoryCard key={item.value}>
+                <CategoryBtnRemove
+                  onClick={() => removeCategories(String(item.value))}
                 >
                   <AiOutlineClose size={13} />
-                </CollectionItemBtnRemove>
+                </CategoryBtnRemove>
                 <small>{item.label}</small>
-              </CollectionItemCard>
+              </CategoryCard>
             ))}
-          </CollectionItemList>
+          </CategoriesList>
         </InputGroup>
         <ButtonForm type="submit">Salver alterações</ButtonForm>
       </ModalForm>

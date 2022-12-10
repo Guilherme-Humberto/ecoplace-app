@@ -2,7 +2,7 @@ import React, { useState, useEffect, FormEvent } from 'react'
 import { BsPlus } from 'react-icons/bs'
 import { applicationApi } from '@api/index'
 import { ICollectionItems } from '@interfaces/index'
-import CollectionItemCard from '@components/atoms/CollectionItemCard'
+import CategoryCard from '@components/atoms/CategoryCard'
 import Modal from '@components/molecules/Modal'
 import { ModalTitle, ModalSubTitle } from '@components/molecules/Modal/styles'
 import InputFC from '@components/atoms/Input'
@@ -22,109 +22,116 @@ import {
 } from './styles'
 
 const AdminPainelSec1FC: React.FC = () => {
-  const [itemId, setItemId] = useState<string>('')
-  const [itemTitle, setItemTitle] = useState<string>('')
-  const [itemImage, setItemImage] = useState<string>('')
+  const [categoryId, setCategoryId] = useState<string>('')
+  const [categoryTitle, setCategoryTitle] = useState<string>('')
+  const [categoryImage, setCategoryImage] = useState<string>('')
 
-  const [collectionItems, setCollectionItems] = useState<ICollectionItems[]>([])
-  const [activeModalCreateItem, setActiveModalCreateItem] = useState<boolean>(false)
-  const [activeModalUpdateItem, setActiveModalUpdateItem] = useState<boolean>(false)
+  const [categories, setCategories] = useState<ICollectionItems[]>([])
+  const [activeModalCreateCategory, setActiveModalCreateCategory] =
+    useState<boolean>(false)
+  const [activeModalUpdateCategory, setActiveModalUpdateCategory] =
+    useState<boolean>(false)
   const [statusMessage, setStatusMessage] = useState<string>(
     'Preencha as informações acima.'
   )
 
-  const getCollectionItems = async () => {
-    const { data: collectionItems } = await applicationApi.get(
-      '/collectionItem/listAll'
-    )
-    return setCollectionItems(collectionItems)
+  const clearCategoryState = () => {
+    setCategoryId('')
+    setCategoryTitle('')
+    setCategoryImage('')
   }
 
-  const clearItemState = () => {
-    setItemId('')
-    setItemTitle('')
-    setItemImage('')
-  }
-  
-  const openModalNewItem = () => {
-    clearItemState()
-    setActiveModalCreateItem(true)
+  const openModalNewCategory = () => {
+    clearCategoryState()
+    setActiveModalCreateCategory(true)
   }
 
-  const openModalUpdateItem = (item: ICollectionItems) => {
-    setActiveModalUpdateItem(true)
+  const openModalUpdateCcategory = (category: ICollectionItems) => {
+    setActiveModalUpdateCategory(true)
 
-    setItemId(item.id)
-    setItemTitle(item.title)
-    setItemImage(item.image)
+    setCategoryId(category.id)
+    setCategoryTitle(category.title)
+    setCategoryImage(category.image)
   }
 
   const closeModalAndClearState = () => {
-    clearItemState()
-    setActiveModalUpdateItem(false)
-    setActiveModalCreateItem(false)
+    clearCategoryState()
+    setActiveModalUpdateCategory(false)
+    setActiveModalCreateCategory(false)
   }
 
-  // Criar novo item de coleta
-  const handleRegisterCollectionItem = async (event: FormEvent) => {
+  const getCategories = async () => {
+    const { data: categoriesResponse } = await applicationApi.get(
+      '/category/listAll'
+    )
+    return setCategories(categoriesResponse.data)
+  }
+
+  // Criar novo categoria
+  const handleRegisterCategory = async (event: FormEvent) => {
     event.preventDefault()
 
     applicationApi
-      .post('/collectionItem/create', {
-        title: itemTitle,
-        image: itemImage
+      .post('/category/create', {
+        title: categoryTitle,
+        image: categoryImage
       })
       .then(() => {
         closeModalAndClearState()
-        getCollectionItems()
+        getCategories()
       })
       .catch(error => {
         console.log(error)
-        clearItemState()
-        setStatusMessage('Erro ao criar item de coleta')
+        clearCategoryState()
+        setStatusMessage('Erro ao criar categoria')
       })
   }
 
-  // Atualizar item de coleta
+  // Atualizar categoria
   const handleUpdateCollectionItem = async (event: FormEvent) => {
     event.preventDefault()
 
     applicationApi
-      .put('/collectionItem/update', {
-        title: itemTitle,
-        image: itemImage
-      }, {
-        params: { id: itemId }
-      })
+      .put(
+        '/category/update',
+        {
+          title: categoryTitle,
+          image: categoryImage
+        },
+        {
+          params: { id: categoryId }
+        }
+      )
       .then(() => {
         closeModalAndClearState()
-        getCollectionItems()
+        getCategories()
       })
       .catch(error => {
         console.log(error)
-        clearItemState()
-        setStatusMessage('Erro ao atualizar item de coleta')
+        clearCategoryState()
+        setStatusMessage('Erro ao atualizar categoria')
       })
   }
 
-  // Deleter item de coleta
-  const handleDeleteCollectionItem = async () => {
-    applicationApi.delete('/collectionItem/delete', {
-        params: { id: itemId }
+  // Deleter categoria
+  const handleDeleteCategory = async () => {
+    applicationApi
+      .delete('/category/delete', {
+        params: { id: categoryId }
       })
       .then(() => {
         closeModalAndClearState()
-        getCollectionItems()
+        getCategories()
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error)
-        clearItemState()
-        setStatusMessage('Erro ao remover item de coleta')
+        clearCategoryState()
+        setStatusMessage('Erro ao remover categoria')
       })
   }
 
   useEffect(() => {
-    getCollectionItems()
+    getCategories()
   }, [])
 
   return (
@@ -135,12 +142,12 @@ const AdminPainelSec1FC: React.FC = () => {
             <Title>Ítems de coleta</Title>
             <ListOfItems>
               <Carrousel>
-                {collectionItems.map(item => (
+                {categories.map(item => (
                   <ItemCarrousel
                     key={item.slug}
-                    onClick={() => openModalUpdateItem(item)}
+                    onClick={() => openModalUpdateCcategory(item)}
                   >
-                    <CollectionItemCard
+                    <CategoryCard
                       id={item.id}
                       slug={item.slug}
                       image={item.image}
@@ -149,73 +156,73 @@ const AdminPainelSec1FC: React.FC = () => {
                   </ItemCarrousel>
                 ))}
               </Carrousel>
-              <ButtonNewItem onClick={openModalNewItem}>
+              <ButtonNewItem onClick={openModalNewCategory}>
                 <BsPlus size={60} />
               </ButtonNewItem>
             </ListOfItems>
           </Column>
         </Constraint>
       </Container>
-      {activeModalCreateItem && itemId == '' && (
+      {activeModalCreateCategory && categoryId == '' && (
         <Modal
           minWidth={'800px'}
           maxWidth={'800px'}
           event={closeModalAndClearState}
         >
           <ModalTitles>
-            <ModalTitle>Novo ítem de coleta</ModalTitle>
-            <ModalSubTitle>Cadastrar novo ítem de coleta</ModalSubTitle>
+            <ModalTitle>Novo categoria</ModalTitle>
+            <ModalSubTitle>Cadastrar nova categoria</ModalSubTitle>
           </ModalTitles>
 
-          <ModalForm onSubmit={handleRegisterCollectionItem}>
+          <ModalForm onSubmit={handleRegisterCategory}>
             <InputFC
               required
               type={'text'}
-              value={itemImage}
-              setState={setItemImage}
-              placeholder={'Imagem do item'}
+              value={categoryImage}
+              setState={setCategoryImage}
+              placeholder={'Imagem da categoria'}
             />
             <InputFC
               required
               type={'text'}
-              value={itemTitle}
-              setState={setItemTitle}
-              placeholder={'Nome do item de coleta'}
+              value={categoryTitle}
+              setState={setCategoryTitle}
+              placeholder={'Nome da categoria'}
             />
-            <BtnForm type="submit">Cadastrar ítem de coleta</BtnForm>
+            <BtnForm type="submit">Cadastrar categoria</BtnForm>
           </ModalForm>
           {statusMessage && <StatusMessage>{statusMessage}</StatusMessage>}
         </Modal>
       )}
-      {activeModalUpdateItem && itemId !== '' && (
+      {activeModalUpdateCategory && categoryId !== '' && (
         <Modal
           minWidth={'800px'}
           maxWidth={'800px'}
           event={closeModalAndClearState}
         >
           <ModalTitles>
-            <ModalTitle>Atualizar ítem de coleta</ModalTitle>
-            <ModalSubTitle>Atualizar ítem de coleta</ModalSubTitle>
+            <ModalTitle>Atualizar categoria</ModalTitle>
+            <ModalSubTitle>Atualizar categoria</ModalSubTitle>
           </ModalTitles>
 
           <ModalForm onSubmit={handleUpdateCollectionItem}>
             <InputFC
               required
               type={'text'}
-              value={itemImage}
-              setState={setItemImage}
-              placeholder={'Imagem do item'}
+              value={categoryImage}
+              setState={setCategoryImage}
+              placeholder={'Imagem da categoria'}
             />
             <InputFC
               required
               type={'text'}
-              value={itemTitle}
-              setState={setItemTitle}
-              placeholder={'Nome do item de coleta'}
+              value={categoryTitle}
+              setState={setCategoryTitle}
+              placeholder={'Nome da categoria'}
             />
-            <BtnForm type="submit">Atualizar ítem de coleta</BtnForm>
-            <BtnForm type="button" outline onClick={handleDeleteCollectionItem}>
-              Remover ítem de coleta
+            <BtnForm type="submit">Atualizar categoria</BtnForm>
+            <BtnForm type="button" outline onClick={handleDeleteCategory}>
+              Remover categoria
             </BtnForm>
           </ModalForm>
           {statusMessage && <StatusMessage>{statusMessage}</StatusMessage>}

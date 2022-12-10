@@ -11,7 +11,7 @@ export const Title = styled.h3`
   font-weight: 500;
 `
 export const Description = styled.p``
-export const ListOfCollections = styled(Splide).attrs({
+export const ListOfZonesCarrousel = styled(Splide).attrs({
   options: {
     perPage: 3,
     gap: 20,
@@ -21,7 +21,7 @@ export const ListOfCollections = styled(Splide).attrs({
 })`
   margin-top: 20px;
 `
-export const CollectionCenterCard = styled(SplideSlide)`
+export const ZoneCard = styled(SplideSlide)`
   padding: 40px 30px;
   border-radius: 5px;
   background: ${props => props.theme.colors.white};
