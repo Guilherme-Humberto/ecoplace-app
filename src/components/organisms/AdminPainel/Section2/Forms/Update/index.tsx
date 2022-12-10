@@ -2,11 +2,7 @@ import React, { useState, useEffect, FormEvent } from 'react'
 import { AiOutlineClose } from 'react-icons/ai'
 import InputFC from '@components/atoms/Input'
 import { applicationApi } from '@api/index'
-import {
-  IAddrsses,
-  ICollectionsCenter,
-  ISelectOptions
-} from '@interfaces/index'
+import { IAddrsses, IZone, ISelectOptions } from '@interfaces/index'
 import {
   Container,
   InputGroup,
@@ -24,7 +20,7 @@ import {
 } from './styles'
 
 interface IModalUpdate {
-  item: ICollectionsCenter
+  item: IZone
   stateValue: ISelectOptions
   stateOptions: ISelectOptions[]
   cityValue: ISelectOptions
@@ -92,17 +88,17 @@ const ModalUpdate: React.FC<IModalUpdate> = ({
   }
 
   const updateZoneAddrs = async (data: object) => {
-    return await applicationApi.put(`/collectionAddrs/update`, data, {
+    return await applicationApi.put(`/address/update`, data, {
       params: {
-        collection_addrs_id: addrsObj?.id,
-        collection_center_id: item?.id
+        addrs_id: addrsObj?.id,
+        zone_id: item?.id
       }
     })
   }
 
   const updateZoneCategories = async (data: string[]) => {
     return await applicationApi.put(
-      `/zone/items/update`,
+      `/zone/category/update`,
       { data },
       {
         params: { id: item?.id }
@@ -112,7 +108,7 @@ const ModalUpdate: React.FC<IModalUpdate> = ({
 
   const removeZoneCategories = async (data: string[]) => {
     return await applicationApi.put(
-      `/zone/items/delete`,
+      `/zone/category/delete`,
       { data },
       {
         params: { id: item?.id }

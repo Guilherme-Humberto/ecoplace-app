@@ -4,11 +4,7 @@ import Modal from '@components/molecules/Modal'
 import { ModalSubTitle, ModalTitle } from '@components/molecules/Modal/styles'
 import ModalUpdate from './Forms/Update'
 import ModalCreate from './Forms/Create'
-import {
-  ICollectionsCenter,
-  ISelectOptions,
-  ICollectionItems
-} from '@interfaces/index'
+import { IZone, ISelectOptions, ICategory } from '@interfaces/index'
 import {
   getMicroRegionById,
   getMesoRegionById,
@@ -30,12 +26,10 @@ import {
 const AdminPainelSec2FC: React.FC = () => {
   const [modalAction, setModalAction] = useState<string>('')
 
-  const [zoneOptions, setZoneOptions] = useState<ICollectionsCenter[]>([])
-  const [zones, setZones] = useState<ICollectionsCenter | null>(null)
+  const [zoneOptions, setZoneOptions] = useState<IZone[]>([])
+  const [zones, setZones] = useState<IZone | null>(null)
 
-  const [categoriesOptions, setCategoriesOptions] = useState<
-    ICollectionItems[]
-  >([])
+  const [categoriesOptions, setCategoriesOptions] = useState<ICategory[]>([])
   const [stateOptions, setStateOptions] = useState<ISelectOptions[]>([])
   const [cityOptions, setCityOptions] = useState([])
 
@@ -58,12 +52,10 @@ const AdminPainelSec2FC: React.FC = () => {
       `/category/listAll`
     )
 
-    const formatedResponse = categoryResponse.data.map(
-      (item: ICollectionItems) => ({
-        value: item.id,
-        label: item.title
-      })
-    )
+    const formatedResponse = categoryResponse.data.map((item: ICategory) => ({
+      value: item.id,
+      label: item.title
+    }))
 
     return setCategoriesOptions(formatedResponse)
   }
@@ -90,7 +82,7 @@ const AdminPainelSec2FC: React.FC = () => {
     return setStateValue(mesoRegionResponse)
   }
 
-  const openModalUpdate = (item: ICollectionsCenter) => {
+  const openModalUpdate = (item: IZone) => {
     setZones(item)
     getStateOptionInZones(Number(item.mesoregion_id))
     getCityOptionInZones(Number(item.microregion_id))
@@ -98,7 +90,7 @@ const AdminPainelSec2FC: React.FC = () => {
   }
 
   const openModalCreate = () => {
-    setZones({} as ICollectionsCenter)
+    setZones({} as IZone)
     return setModalAction('create')
   }
 
@@ -150,7 +142,7 @@ const AdminPainelSec2FC: React.FC = () => {
           </ModalTitles>
 
           <ModalUpdate
-            item={zones as ICollectionsCenter}
+            item={zones as IZone}
             stateValue={stateValue}
             stateOptions={stateOptions}
             cityValue={cityValue}
@@ -179,7 +171,7 @@ const AdminPainelSec2FC: React.FC = () => {
           </ModalTitles>
 
           <ModalCreate
-            item={zones as ICollectionsCenter}
+            item={zones as IZone}
             stateValue={stateValue}
             stateOptions={stateOptions}
             cityValue={cityValue}

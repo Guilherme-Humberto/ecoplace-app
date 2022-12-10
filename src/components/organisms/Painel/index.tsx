@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
 import { useAppContext } from 'context/AppContext'
-import CollectionItemsFC from './CollectionItems'
+import CategoryFC from './Categories'
 import PainelHeader from '@components/molecules/PainelHeader'
 import PainelTitle from '@components/molecules/PainelTitle'
-import CollectionsCenterFC from './CollectionsCenter'
-import { ICollectionItems } from '@interfaces/index'
+import ZoneFC from './Zones'
+import { ICategory } from '@interfaces/index'
 import { Container } from './styles'
 
 const PainelPageFC: React.FC = () => {
-  const { userNameGlobalValue, stateGlobalValue, cityGlobalValue } = useAppContext()
-  const [selectCollectionItem, setSelectCollectionItem] = useState<ICollectionItems[]>([])
+  const { userNameGlobalValue, stateGlobalValue, cityGlobalValue } =
+    useAppContext()
+  const [selectCategory, setSelectCategory] = useState<ICategory[]>([])
 
   return (
     <>
@@ -19,14 +20,14 @@ const PainelPageFC: React.FC = () => {
           title={`Olá ${userNameGlobalValue}`}
           subtitle={`Visualize os pontos de coleta próximos de ${stateGlobalValue.label}/${cityGlobalValue.label}`}
         />
-        <CollectionItemsFC
-          selectCollectionItem={selectCollectionItem}
-          setSelectCollectionItem={setSelectCollectionItem}
+        <CategoryFC
+          selectCategory={selectCategory}
+          setSelectCategory={setSelectCategory}
         />
-        <CollectionsCenterFC
-          selectCollectionItem={selectCollectionItem}
-          mesoRegionId={stateGlobalValue.value}
-          microRegionId={cityGlobalValue.value}
+        <ZoneFC
+          selectCategory={selectCategory}
+          mesoRegionId={stateGlobalValue.value as number}
+          microRegionId={cityGlobalValue.value as number}
         />
       </Container>
     </>

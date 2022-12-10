@@ -42,7 +42,7 @@ export const ContactWrapper = styled.div``
 export const Addresses = styled.div`
   font-size: 12px;
 `
-export const CollectionItems = styled.div`
+export const CategoriesList = styled.div`
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -63,7 +63,7 @@ export const Description = styled.p`
   max-width: 350px;
 `
 
-export const CollectItem = styled.div`
+export const CategoryCard = styled.div`
   font-size: 13px;
   padding: 5px 10px;
   border-radius: 100px;

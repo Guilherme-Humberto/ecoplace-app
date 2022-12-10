@@ -1,7 +1,7 @@
 import React, { useState, useEffect, FormEvent } from 'react'
 import { BsPlus } from 'react-icons/bs'
 import { applicationApi } from '@api/index'
-import { ICollectionItems } from '@interfaces/index'
+import { ICategory } from '@interfaces/index'
 import CategoryCard from '@components/atoms/CategoryCard'
 import Modal from '@components/molecules/Modal'
 import { ModalTitle, ModalSubTitle } from '@components/molecules/Modal/styles'
@@ -26,7 +26,7 @@ const AdminPainelSec1FC: React.FC = () => {
   const [categoryTitle, setCategoryTitle] = useState<string>('')
   const [categoryImage, setCategoryImage] = useState<string>('')
 
-  const [categories, setCategories] = useState<ICollectionItems[]>([])
+  const [categories, setCategories] = useState<ICategory[]>([])
   const [activeModalCreateCategory, setActiveModalCreateCategory] =
     useState<boolean>(false)
   const [activeModalUpdateCategory, setActiveModalUpdateCategory] =
@@ -46,7 +46,7 @@ const AdminPainelSec1FC: React.FC = () => {
     setActiveModalCreateCategory(true)
   }
 
-  const openModalUpdateCcategory = (category: ICollectionItems) => {
+  const openModalUpdateCcategory = (category: ICategory) => {
     setActiveModalUpdateCategory(true)
 
     setCategoryId(category.id)
