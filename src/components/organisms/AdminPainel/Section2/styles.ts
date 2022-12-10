@@ -11,7 +11,7 @@ export const Title = styled.h3`
   font-weight: 500;
 `
 export const Description = styled.p``
-export const ListOfCollections = styled(Splide).attrs({
+export const ListOfZonesCarrousel = styled(Splide).attrs({
   options: {
     perPage: 3,
     gap: 20,
@@ -21,9 +21,14 @@ export const ListOfCollections = styled(Splide).attrs({
 })`
   margin-top: 20px;
 `
-export const CollectionCenterCard = styled(SplideSlide)`
+export const ZoneItemSlide = styled(SplideSlide)`
+  position: relative;
+  margin: 20px 0;
+`
+export const ZoneCard = styled.div`
   padding: 40px 30px;
   border-radius: 5px;
+  width: fit-content;
   background: ${props => props.theme.colors.white};
   border: 2px solid ${props => props.theme.colors.white};
   transition: 0.5s;
@@ -42,12 +47,30 @@ export const ButtonNewItem = styled.button`
   border: 2px solid transparent;
   outline: none;
   border-radius: 5px;
-  background: ${props => props.theme.colors.quartiary};
+  background: ${props => props.theme.colors.white};
+  border-color: ${props => props.theme.colors.green};
   transition: 0.5s;
 
   &:hover {
     cursor: pointer;
-    background: ${props => props.theme.colors.white};
-    border-color: ${props => props.theme.colors.green};
+    color: ${props => props.theme.colors.white};
+    background: ${props => props.theme.colors.green};
   }
+`
+export const ZoneBtnRemove = styled.button`
+  position: absolute;
+  z-index: 2;
+  top: -10px;
+  right: -10px;
+  width: 20px;
+  height: 20px;
+  outline: none;
+  border-radius: 100px;
+  border: none;
+  background: ${props => props.theme.colors.danger};
+  color: ${props => props.theme.colors.white};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 `

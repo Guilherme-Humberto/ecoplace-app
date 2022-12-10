@@ -19,7 +19,7 @@ export const Container = styled.header`
 `
 
 export const Logo = styled.div``
-export const LinkBackToHome = styled.a`
+export const LinkBackToHome = styled.div`
   font-weight: 500;
   font-family: ${props => props.theme.fonts.secondary};
 `

@@ -1,12 +1,11 @@
 import React, { useState, useEffect, FormEvent } from 'react'
+import { RiCloseFill } from 'react-icons/ri'
 import { applicationApi } from '@api/index'
 import Modal from '@components/molecules/Modal'
 import { ModalSubTitle, ModalTitle } from '@components/molecules/Modal/styles'
-import {
-  ICollectionsCenter,
-  ISelectOptions,
-  ICollectionItems
-} from '@interfaces/index'
+import ModalUpdate from './Forms/Update'
+import ModalCreate from './Forms/Create'
+import { IZone, ISelectOptions, ICategory } from '@interfaces/index'
 import {
   getMicroRegionById,
   getMesoRegionById,
@@ -19,45 +18,56 @@ import {
   Container,
   Title,
   Description,
-  ListOfCollections,
-  CollectionCenterCard,
+  ListOfZonesCarrousel,
+  ZoneCard,
   ModalTitles,
-  ButtonNewItem
+  ButtonNewItem,
+  ZoneItemSlide,
+  ZoneBtnRemove
 } from './styles'
-import ModalUpdate from './Forms/Update'
-import ModalCreate from './Forms/Create'
 
 const AdminPainelSec2FC: React.FC = () => {
   const [modalAction, setModalAction] = useState<string>('')
 
-  const [collectionsCenterOptions, setCollectionsCenterOptions] = useState<ICollectionsCenter[]>([])
-  const [collectionCenter, setCollectionCenter] = useState<ICollectionsCenter | null>(null)
+  const [zoneOptions, setZoneOptions] = useState<IZone[]>([])
+  const [zones, setZones] = useState<IZone | null>(null)
 
-  const [collectionsItemOptions, setCollectionsItemOptions] = useState<ICollectionItems[]>([])
+  const [categoriesOptions, setCategoriesOptions] = useState<ICategory[]>([])
   const [stateOptions, setStateOptions] = useState<ISelectOptions[]>([])
   const [cityOptions, setCityOptions] = useState([])
 
-  const [stateValue, setStateValue] = useState<ISelectOptions>({} as ISelectOptions)
-  const [cityValue, setCityValue] = useState<ISelectOptions>({} as ISelectOptions)
+  const [stateValue, setStateValue] = useState<ISelectOptions>(
+    {} as ISelectOptions
+  )
+  const [cityValue, setCityValue] = useState<ISelectOptions>(
+    {} as ISelectOptions
+  )
 
-  const getCollectionsCenter = async () => {
+  const getZones = async () => {
     const { data: collectionsCenter } = await applicationApi.get(
-      `/collectionCenter/listAll`
+      `/zone/listAll`
     )
-    return setCollectionsCenterOptions(collectionsCenter)
+    return setZoneOptions(collectionsCenter)
   }
 
-  const getCollectionsItem = async () => {
-    const { data: collectionsItem } = await applicationApi.get(
-      `/collectionItem/listAll`
+  const getCategories = async () => {
+    const { data: categoryResponse } = await applicationApi.get(
+      `/category/listAll`
     )
 
-    const formatedResponse = collectionsItem.map((item: ICollectionItems) => ({
+    const formatedResponse = categoryResponse.data.map((item: ICategory) => ({
       value: item.id,
       label: item.title
     }))
 
-    return setCollectionsItemOptions(formatedResponse)
+    return setCategoriesOptions(formatedResponse)
+  }
+
+  const removeZone = async (zoneId: string) => {
+    // return await applicationApi.delete(
+    //   `/zone/delete?id=${zoneId}`
+    // )
+    alert('TESTE')
   }
 
   const getMesoRegionsOptions = async () => {
@@ -71,32 +81,32 @@ const AdminPainelSec2FC: React.FC = () => {
   }
 
   // Busca de cidades por microRegionId
-  const getCityOptionInCollectionCenter = async (microRegionId: number) => {
+  const getCityOptionInZones = async (microRegionId: number) => {
     const microRegionResponse = await getMicroRegionById(microRegionId)
     return setCityValue(microRegionResponse)
   }
 
   // Busca de estados por microRegionId
-  const getStateOptionInCollectionCenter = async (mesoRegionId: number) => {
+  const getStateOptionInZones = async (mesoRegionId: number) => {
     const mesoRegionResponse = await getMesoRegionById(mesoRegionId)
     return setStateValue(mesoRegionResponse)
   }
 
-  const openModalUpdate = (item: ICollectionsCenter) => {
-    setCollectionCenter(item)
-    getStateOptionInCollectionCenter(Number(item.mesoregion_id))
-    getCityOptionInCollectionCenter(Number(item.microregion_id))
+  const openModalUpdate = (item: IZone) => {
+    setZones(item)
+    getStateOptionInZones(Number(item.mesoregion_id))
+    getCityOptionInZones(Number(item.microregion_id))
     return setModalAction('update')
   }
 
   const openModalCreate = () => {
-    setCollectionCenter({} as ICollectionsCenter)
+    setZones({} as IZone)
     return setModalAction('create')
   }
 
   useEffect(() => {
-    getCollectionsCenter()
-    getCollectionsItem()
+    getZones()
+    getCategories()
     getMesoRegionsOptions()
   }, [])
 
@@ -109,21 +119,25 @@ const AdminPainelSec2FC: React.FC = () => {
       <Container>
         <Constraint>
           <Column>
-            <Title>Pontos de coleta</Title>
-            <ButtonNewItem onClick={openModalCreate}>Novo Ponto de coleta</ButtonNewItem>
+            <Title>Zonas de coleta</Title>
+            <ButtonNewItem onClick={openModalCreate}>
+              Novo zona de coleta
+            </ButtonNewItem>
           </Column>
           <Column>
-            <ListOfCollections>
-              {collectionsCenterOptions.map((item, index) => (
-                <CollectionCenterCard
-                  key={index}
-                  onClick={() => openModalUpdate(item)}
-                >
-                  <Title>{item.name}</Title>
-                  <Description>{item.description}</Description>
-                </CollectionCenterCard>
+            <ListOfZonesCarrousel>
+              {zoneOptions.map((znone, index) => (
+                <ZoneItemSlide key={index}>
+                  <ZoneBtnRemove onClick={() => removeZone(znone.id)}>
+                    <RiCloseFill size={14} />
+                  </ZoneBtnRemove>
+                  <ZoneCard onClick={() => openModalUpdate(znone)}>
+                    <Title>{znone.name}</Title>
+                    <Description>{znone.description}</Description>
+                  </ZoneCard>
+                </ZoneItemSlide>
               ))}
-            </ListOfCollections>
+            </ListOfZonesCarrousel>
           </Column>
         </Constraint>
       </Container>
@@ -138,12 +152,12 @@ const AdminPainelSec2FC: React.FC = () => {
           }}
         >
           <ModalTitles>
-            <ModalTitle>Atualizar ponto de coleta</ModalTitle>
-            <ModalSubTitle>Atualizar ponto de coleta</ModalSubTitle>
+            <ModalTitle>Atualizar zona de coleta</ModalTitle>
+            <ModalSubTitle>Atualizar zona de coleta</ModalSubTitle>
           </ModalTitles>
 
           <ModalUpdate
-            item={collectionCenter as ICollectionsCenter}
+            item={zones as IZone}
             stateValue={stateValue}
             stateOptions={stateOptions}
             cityValue={cityValue}
@@ -151,8 +165,8 @@ const AdminPainelSec2FC: React.FC = () => {
             setStateValue={setStateValue}
             setCityValue={setCityValue}
             setModalAction={setModalAction}
-            getCollectionsCenter={getCollectionsCenter}
-            collectionsItemOptions={collectionsItemOptions}
+            getZones={getZones}
+            categoriesOptions={categoriesOptions}
           />
         </Modal>
       )}
@@ -167,12 +181,12 @@ const AdminPainelSec2FC: React.FC = () => {
           }}
         >
           <ModalTitles>
-            <ModalTitle>Criar novo ponto de coleta</ModalTitle>
-            <ModalSubTitle>Criar ponto de coleta</ModalSubTitle>
+            <ModalTitle>Criar zona de coleta</ModalTitle>
+            <ModalSubTitle>Criar zona de coleta</ModalSubTitle>
           </ModalTitles>
 
           <ModalCreate
-            item={collectionCenter as ICollectionsCenter}
+            item={zones as IZone}
             stateValue={stateValue}
             stateOptions={stateOptions}
             cityValue={cityValue}
@@ -180,8 +194,8 @@ const AdminPainelSec2FC: React.FC = () => {
             setStateValue={setStateValue}
             setCityValue={setCityValue}
             setModalAction={setModalAction}
-            getCollectionsCenter={getCollectionsCenter}
-            collectionsItemOptions={collectionsItemOptions}
+            getZones={getZones}
+            categoriesOptions={categoriesOptions}
           />
         </Modal>
       )}

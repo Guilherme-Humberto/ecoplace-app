@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import ReactSelect from 'react-select'
-import { Splide, SplideSlide } from '@splidejs/react-splide'
 import { StyleButton } from '@components/atoms/Button/styles'
 
 export const customSelectStyles = {
@@ -33,7 +32,7 @@ export const InputGroup = styled.div`
   flex-direction: column;
   margin: 20px 0 10px 0;
 `
-export const InputGruopGrid = styled.div`
+export const InputGroupGrid = styled.div`
   display: grid;
   gap: 20px;
   grid-template-columns: 1fr 1fr;
@@ -43,6 +42,9 @@ export const SelectState = styled(ReactSelect)`
 `
 export const AddresBlock = styled.div``
 export const AddresTabItem = styled.div<{ open?: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 10px 20px;
   margin-top: 10px;
   border-radius: 5px;
@@ -62,13 +64,13 @@ export const ButtonForm = styled.button`
   outline: none;
   margin-top: 40px;
 `
-export const CollectionItemList = styled.div`
+export const CategoriesList = styled.div`
   display: flex;
   gap: 20px;
   align-items: center;
   flex-wrap: wrap;
 `
-export const CollectionItemCard = styled.div`
+export const CategoryCard = styled.div`
   position: relative;
   padding: 10px 20px;
   border-radius: 100px;
@@ -77,7 +79,7 @@ export const CollectionItemCard = styled.div`
   background: ${props => props.theme.colors.gray};
 `
 
-export const CollectionItemBtnRemove = styled.button`
+export const CategoryBtnRemove = styled.button`
   position: absolute;
   top: -5px;
   right: -5px;
@@ -95,5 +97,30 @@ export const CollectionItemBtnRemove = styled.button`
 
   &:hover {
     cursor: pointer;
+  }
+`
+export const BtnAddAddress = styled.button`
+  ${StyleButton}
+  outline: none;
+  margin-top: 20px;
+  background: transparent;
+  color: ${props => props.theme.colors.green};
+  border: 2px solid ${props => props.theme.colors.green};
+
+  &:hover {
+    color: ${props => props.theme.colors.white};
+  }
+`
+
+export const BtnSaveAddrsInList = styled.button`
+  ${StyleButton}
+  outline: none;
+  margin-top: 20px;
+  background: transparent;
+  color: ${props => props.theme.colors.green};
+  border: 2px solid ${props => props.theme.colors.green};
+
+  &:hover {
+    color: ${props => props.theme.colors.white};
   }
 `

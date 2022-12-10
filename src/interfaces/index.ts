@@ -11,14 +11,14 @@ export interface IAddrsses {
   district: string
 }
 
-export interface ICollectionItems {
+export interface ICategory {
   id: string
   title: string
   slug: string
   image: string
 }
 
-export interface ICollectionsCenter {
+export interface IZone {
   id: string
   name: string
   description: string
@@ -28,11 +28,11 @@ export interface ICollectionsCenter {
   mesoregion_id?: number
   microregion_id?: number
   addresses: IAddrsses[]
-  items: { id: string, title: string }[]
+  items: { id: string; title: string }[]
 }
 
-export interface ICollectionsCenterFC {
+export interface IZonesFC {
   mesoRegionId: number
   microRegionId: number
-  selectCollectionItem: ICollectionItems[]
+  selectCategory: ICategory[]
 }

@@ -10,7 +10,9 @@ const PainelHeader: React.FC = () => {
         <Image src="/ecoplace-icon-dark.svg" width={150} height={80} />
       </Logo>
       <LinkBackToHome>
-        <Link href="/">Voltar ao ínicio</Link>
+        <Link href="/" passHref>
+          Voltar ao ínicio
+        </Link>
       </LinkBackToHome>
     </Container>
   )

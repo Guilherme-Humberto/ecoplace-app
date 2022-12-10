@@ -6,8 +6,7 @@ import { AiOutlineMail } from 'react-icons/ai'
 import { applicationApi } from '@api/index'
 import ButtonFC from '@components/atoms/Button'
 import MessageAlert from '@components/molecules/MessageAlert'
-import { ICollectionsCenter, ICollectionsCenterFC } from '@interfaces/index'
-import { collectionDetailsMock } from '@mocks/index'
+import { IZone, IZonesFC } from '@interfaces/index'
 import {
   Container,
   ItemCard,
@@ -16,34 +15,31 @@ import {
   AboutWrapper,
   ContactWrapper,
   Addresses,
-  CollectionItems,
+  CategoriesList,
   ContactsBtn,
   Description,
-  CollectItem,
+  CategoryCard,
   Buttons
 } from './styles'
 
-const CollectionsCenterFC: React.FC<ICollectionsCenterFC> = ({
+const ZonesFC: React.FC<IZonesFC> = ({
   mesoRegionId,
   microRegionId,
-  selectCollectionItem
+  selectCategory
 }) => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
-  const [collectionsCenter, setCollectionsCenter] = useState<ICollectionsCenter[]>([])
+  const [zones, setZones] = useState<IZone[]>([])
 
-  const getCollectionsCenter = async () => {
+  const getZones = async () => {
     setIsLoading(true)
-    const { data: collectionsCenter } = await applicationApi.post(
-      `/collectionCenter`,
-      {
-        mesoregion_id: mesoRegionId,
-        microregion_id: microRegionId,
-        item_id: selectCollectionItem.map(item => item.id)
-      }
-    )
+    const { data: zonesResponse } = await applicationApi.post(`/zone`, {
+      mesoregion_id: mesoRegionId,
+      microregion_id: microRegionId,
+      categoriesIds: selectCategory.map(item => item.id)
+    })
 
-    setCollectionsCenter(collectionsCenter)
+    setZones(zonesResponse)
     return setIsLoading(false)
   }
 
@@ -54,19 +50,19 @@ const CollectionsCenterFC: React.FC<ICollectionsCenterFC> = ({
   const navigateToEmail = (email: string) => router.push(`mailto:${email}`)
 
   useEffect(() => {
-    if (mesoRegionId && microRegionId) getCollectionsCenter()
-  }, [selectCollectionItem, mesoRegionId, microRegionId])
+    if (mesoRegionId && microRegionId) getZones()
+  }, [selectCategory, mesoRegionId, microRegionId])
 
-  if (selectCollectionItem.length == 0) {
+  if (selectCategory.length == 0) {
     return (
       <MessageAlert
-        title="Selecione um item de coleta"
-        subtitle="Selecione um item de coleta para visualizar os ponto de coleta na sua região."
+        title="Selecione uma categoria"
+        subtitle="Selecione uma categoria para visualizar as zonas de coleta na sua região."
       />
     )
   }
 
-  if (!isLoading && collectionsCenter.length == 0)
+  if (!isLoading && zones.length == 0)
     return (
       <MessageAlert
         link="Entrar em contato"
@@ -79,45 +75,47 @@ const CollectionsCenterFC: React.FC<ICollectionsCenterFC> = ({
     return (
       <MessageAlert
         title="Carregando..."
-        subtitle="Estamos procurando os ponto de coleta próximos da sua região."
+        subtitle="Estamos procurando as zonas de coleta próximos da sua região."
       />
     )
 
   return (
     <Container>
-      {collectionsCenter.map((item, index) => (
+      {zones.map((item, index) => (
         <ItemCard key={index}>
           <ImageWrapper>
             <Image
               src={item.image || ''}
-              alt={`Ponto de coleta - ${item.name}`}
+              alt={`Zona de coleta - ${item.name}`}
               layout="fill"
-              objectFit='cover'
+              objectFit="cover"
             />
           </ImageWrapper>
           <AboutWrapper>
             <div>
-              <small>Ponto de coleta</small>
+              <small>Zona de coleta</small>
               <Title>{item.name}</Title>
               <Description>{item.description}</Description>
             </div>
             <Addresses>
               {item.addresses.map(addrs => (
                 <div key={addrs.id}>
-                  <p>{addrs.addrs_name} | {addrs.addrs_number}</p>
-                  <p>CEP: {addrs.zip_code} | {addrs.district}</p>
+                  <p>
+                    {addrs.addrs_name} | {addrs.addrs_number}
+                  </p>
+                  <p>
+                    CEP: {addrs.zip_code} | {addrs.district}
+                  </p>
                 </div>
               ))}
             </Addresses>
           </AboutWrapper>
           <ContactWrapper>
-            <CollectionItems>
-              {item.items.map(collectItem => (
-                <CollectItem key={collectItem.id}>
-                  {collectItem.title}
-                </CollectItem>
+            <CategoriesList>
+              {item.items.map(category => (
+                <CategoryCard key={category.id}>{category.title}</CategoryCard>
               ))}
-            </CollectionItems>
+            </CategoriesList>
             <ContactsBtn>
               <small>Entre em contato</small>
               <Buttons>
@@ -140,4 +138,4 @@ const CollectionsCenterFC: React.FC<ICollectionsCenterFC> = ({
   )
 }
 
-export default CollectionsCenterFC
+export default ZonesFC

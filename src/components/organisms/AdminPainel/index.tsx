@@ -15,7 +15,7 @@ const AdminPainel: React.FC = () => {
       <Container>
         <PainelTitle
           title={`Olá ${userNameGlobalValue}`}
-          subtitle={`Cadastre novos ítens e pontos de coleta`}
+          subtitle={`Cadastre novas categorias e zonas de coleta`}
         />
         <AdminPainelSec1FC />
         <AdminPainelSec2FC />

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 export const Container = styled.div`
   display: grid;
@@ -8,4 +8,4 @@ export const Container = styled.div`
   gap: 20px;
   margin: 40px 0;
   max-width: 1400px;
-`;
+`
